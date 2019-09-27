@@ -4,14 +4,15 @@ import './JWalletManager.dart';
 import './JProductManager.dart';
 
 import './JWallet/JWalletBase.dart';
-import './JWallet/interface/JInterfaceBTC.dart';
-import './JWallet/interface/JInterfaceETH.dart';
+import './JWallet/BTC/interface/JInterfaceBTC.dart';
+import './JWallet/ETH/interface/JInterfaceETH.dart';
+import './JWallet/BTC/JWalletBTC.dart';
 
 import './JProduct/JProductHD.dart';
 import './JProduct/JProductBlade.dart';
 import './JProduct/JProductImport.dart';
 
-import 'JWallet/JWalletBTC.dart';
+import './JKeyStroe/JKeyStoreBladeImpl.dart';
 
 final getIt = GetIt.instance;
 const productDefault = "prodctDefault";
@@ -27,7 +28,8 @@ void init(){
   getJProductManager().insertOne(productImport, new JProductImport());
 
   //JWalletManager从数据库初始化,先创建一个测试
-  getJWalletManager().insertOne("123", new JWalletBTC());
+  JKeyStoreBladeImpl keystore = new JKeyStoreBladeImpl();
+  getJWalletManager().insertOne("123", new JWalletBTC(keystore,WalletType.Hardware));
 }
 
 //获取两个Manager
