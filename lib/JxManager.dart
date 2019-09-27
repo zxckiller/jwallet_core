@@ -2,10 +2,11 @@ import 'package:uuid/uuid.dart';
 
 class JxManager<T>{
   Map<String,T> _map = new Map<String,T>();
+  var uuid = new Uuid();
   String addOne(T t){
-    var uuid = new Uuid();
-    _map[uuid.v4()] = t;
-    return uuid.v4();
+    String key = uuid.v4();
+    _map[key] = t;
+    return key;
   }
   T getOne(String key){
     return _map[key];
