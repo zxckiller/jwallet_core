@@ -24,9 +24,9 @@ void init(){
   getIt.registerSingleton<JWalletManager>(JWalletManager());
   getIt.registerSingleton<JProductManager>(JProductManager());
   //初始化的需要创建三个默认的产品
-  getJProductManager().insertOne(productDefault, new JProductHD());
-  getJProductManager().insertOne(productBlade, new JProductBlade());
-  getJProductManager().insertOne(productImport, new JProductImport());
+  getJProductManager().addOne(new JProductHD(),productDefault);
+  getJProductManager().addOne(new JProductBlade(),productBlade);
+  getJProductManager().addOne(new JProductImport(),productImport);
 }
 
 //获取两个Manager
