@@ -4,6 +4,6 @@ import '../../JKeyStroe/interface/JInterfaceKeyStore.dart';
 
 class JWalletETH extends JWalletBase with JInterfaceETH{
 
-  JWalletETH(JInterfaceKeyStore keyStoreimpl):super(keyStoreimpl);
+  JWalletETH(String endPoint,JInterfaceKeyStore keyStoreimpl):super(endPoint,keyStoreimpl);
   String getAddress(){return "0x4087A8Dbd2A8376b57Eecdfc4F3E92339e8E9aE0";}
 }

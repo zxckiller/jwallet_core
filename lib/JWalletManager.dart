@@ -10,7 +10,7 @@ enum CoinType { BTC, ETH}
 
 class JWalletManager extends JxManager<JWalletBase>{
 
-  String walletFactory(CoinType coin,KeyStoreType type){
+  String walletFactory(String endPoint,CoinType coin,KeyStoreType type){
     
     JInterfaceKeyStore keystore;
     if(type == KeyStoreType.Blade){
@@ -21,10 +21,10 @@ class JWalletManager extends JxManager<JWalletBase>{
     JWalletBase wallet;
     switch (coin) {
       case CoinType.BTC:
-        wallet = new JWalletBTC(keystore);
+        wallet = new JWalletBTC(endPoint,keystore);
         break;
       case CoinType.ETH:
-        wallet = new JWalletETH(keystore);
+        wallet = new JWalletETH(endPoint,keystore);
         break;
       default:
     }
