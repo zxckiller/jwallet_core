@@ -4,8 +4,8 @@ import './JWalletManager.dart';
 import './JProductManager.dart';
 
 import './JWallet/JWalletBase.dart';
-import './JWallet/BTC/interface/JInterfaceBTC.dart';
-import './JWallet/ETH/interface/JInterfaceETH.dart';
+import './JWallet/BTC/JWalletBTC.dart';
+import './JWallet/ETH/JWalletETH.dart';
 
 import './JProduct/JProductHD.dart';
 import './JProduct/JProductBlade.dart';
@@ -35,8 +35,8 @@ JProductManager getJProductManager() => getIt<JProductManager>();
 
 //方便上层直接获取Wallet的接口
 JWalletBase    getJWallet(String key)     => getJWalletManager().getOne(key);
-JInterfaceBTC  getJWalletBTC(String key)  => getJWalletManager().getOne(key) as JInterfaceBTC;
-JInterfaceETH  getJWalletETH(String key)  => getJWalletManager().getOne(key) as JInterfaceETH;
+JWalletBTC  getJWalletBTC(String key)  => getJWalletManager().getOne(key) as JWalletBTC;
+JWalletETH  getJWalletETH(String key)  => getJWalletManager().getOne(key) as JWalletETH;
 
 //方便上层直接获取Product的接口
 JProductHD getJProductDefault()    => getJProductManager().getOne(productDefault) as JProductHD;

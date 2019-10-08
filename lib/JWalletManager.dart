@@ -6,7 +6,7 @@ import './JWallet/JWalletBase.dart';
 import './JWallet/BTC/JWalletBTC.dart';
 import './JWallet/ETH/JWalletETH.dart';
 
-enum CoinType { BTC, ETH}
+
 
 class JWalletManager extends JxManager<JWalletBase>{
 

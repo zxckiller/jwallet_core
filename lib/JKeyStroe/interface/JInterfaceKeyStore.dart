@@ -4,4 +4,7 @@ abstract class JInterfaceKeyStore {
   KeyStoreType type();
   String connectDevice();
   String openDB();
+
+  Map<String, dynamic> toJson();
+
 }
