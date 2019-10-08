@@ -1,34 +1,21 @@
-import './JKeyStroe/JKeyStoreDBImpl.dart';
-import './JKeyStroe/JKeyStoreBladeImpl.dart';
 import './JKeyStroe/interface/JInterfaceKeyStore.dart';
 import './JxManager.dart';
 import './JWallet/JWalletBase.dart';
-import './JWallet/BTC/JWalletBTC.dart';
-import './JWallet/ETH/JWalletETH.dart';
+import './JWallet/JWalletFactory.dart';
+
 
 
 
 class JWalletManager extends JxManager<JWalletBase>{
 
-  String walletFactory(String endPoint,CoinType coin,KeyStoreType type){
-    
-    JInterfaceKeyStore keystore;
-    if(type == KeyStoreType.Blade){
-        keystore = new JKeyStoreBladeImpl();
-    }else if(type == KeyStoreType.LocalDB){
-        keystore = new JKeyStoreDBImpl();
-    }
-    JWalletBase wallet;
-    switch (coin) {
-      case CoinType.BTC:
-        wallet = new JWalletBTC(endPoint,keystore);
-        break;
-      case CoinType.ETH:
-        wallet = new JWalletETH(endPoint,keystore);
-        break;
-      default:
-    }
-
+  String newWalletFromParm(String endPoint,WalletType wType,KeyStoreType kType){  
+    JWalletBase wallet = JWalletFactory.fromParam(endPoint, wType, kType);
     return addOne(wallet);  
   }
+
+  String newWalletFromJson(Map<String, dynamic> json){
+    JWalletBase wallet = JWalletFactory.fromJson(json);
+    return addOne(wallet);  
+  }
+
 }
