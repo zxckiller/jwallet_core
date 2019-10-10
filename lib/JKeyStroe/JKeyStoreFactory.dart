@@ -20,7 +20,7 @@ class JKeyStoreFactory{
 
   static JInterfaceKeyStore fromJson(Map<String, dynamic> json){
     JInterfaceKeyStore keystore;
-    KeyStoreType type = KeyStoreType.values[json["type"]];
+    KeyStoreType type = KeyStoreType.values[json["keyStore"]["kType"]];
     switch (type) {
       case KeyStoreType.Blade:
         keystore = new JKeyStoreBladeImpl.fromJson(json);

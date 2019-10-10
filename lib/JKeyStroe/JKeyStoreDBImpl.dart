@@ -11,12 +11,18 @@ class JKeyStoreDBImpl implements JInterfaceKeyStore{
 
   //Json构造函数
   JKeyStoreDBImpl.fromJson(Map<String, dynamic> json):
-  _type = KeyStoreType.values[json["type"]];
+  _type = KeyStoreType.values[json["keyStore"]["kType"]];
   
   Map<String, dynamic> toJson() =>
   {
-    'type': _type.index,
+    'kType': _type.index,
   };
+  
+  Map<String, dynamic> toJsonKey() =>
+  {
+    'kType': _type.index,
+  };
+
 
   KeyStoreType type(){return _type;}
   String connectDevice(){throw JUBR_IMPL_NOT_SUPPORT;}

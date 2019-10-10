@@ -1,10 +1,11 @@
 //所有钱包的基类实现
 import '../JKeyStroe/interface/JInterfaceKeyStore.dart';
 import '../JKeyStroe/JKeyStoreFactory.dart';
+import '../JsonableObject.dart';
 
 enum WalletType { BTC, ETH}
 
-abstract class JWalletBase{
+abstract class JWalletBase implements JsonableObject{
   String name;
   String _endPoint;
   WalletType wType;
@@ -16,10 +17,10 @@ abstract class JWalletBase{
 
   //Json构造函数
   JWalletBase.fromJson(Map<String, dynamic> json):
-  wType = WalletType.values[json["type"]]{
+    wType = WalletType.values[json["wType"]],
+    _endPoint = json["endPoint"]
+  {
     keyStore = JKeyStoreFactory.fromJson(json);
-    wType = json["wType"];
-    _endPoint = json["endPoint"];
   }
 
   Map<String, dynamic> toJson() =>
@@ -29,6 +30,10 @@ abstract class JWalletBase{
     'endPoint' : _endPoint
   };
 
-
+  Map<String, dynamic> toJsonKey() =>
+  {
+    'wType': wType.index,
+    'keyStore' : keyStore.toJsonKey()
+  };
   
 }

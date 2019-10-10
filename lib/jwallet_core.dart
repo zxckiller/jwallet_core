@@ -34,9 +34,9 @@ JWalletManager getJWalletManager() => getIt<JWalletManager>();
 JProductManager getJProductManager() => getIt<JProductManager>();
 
 //方便上层直接获取Wallet的接口
-JWalletBase    getJWallet(String key)     => getJWalletManager().getOne(key);
-JWalletBTC  getJWalletBTC(String key)  => getJWalletManager().getOne(key) as JWalletBTC;
-JWalletETH  getJWalletETH(String key)  => getJWalletManager().getOne(key) as JWalletETH;
+Future<JWalletBase>   getJWallet(String key)  => getJWalletManager().getWallet(key);
+Future<JWalletBTC>  getJWalletBTC(String key)  => getJWalletManager().getWallet(key) ;
+Future<JWalletETH>  getJWalletETH(String key)  => getJWalletManager().getWallet(key) ;
 
 //方便上层直接获取Product的接口
 JProductHD getJProductDefault()    => getJProductManager().getOne(productDefault) as JProductHD;

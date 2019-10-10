@@ -23,7 +23,7 @@ class JWalletFactory{
   }
 
   static JWalletBase fromJson(Map<String, dynamic> json){
-    WalletType wType = WalletType.values[json["type"]];
+    WalletType wType = WalletType.values[json["wType"]];
     JWalletBase wallet;
     switch (wType) {
       case WalletType.BTC:
