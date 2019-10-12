@@ -1,9 +1,8 @@
 import '../JsonableObject.dart';
 import '../jwallet_core.dart';
-import 'dart:convert';
 
 enum ProductType {HD, JubiterBlade,Import}
-abstract class JProductBase implements JsonableObject{
+abstract class JProductBase extends JsonableObject{
   String name;
   ProductType pType;
   List<String> wallets = new List<String>();
@@ -17,7 +16,9 @@ abstract class JProductBase implements JsonableObject{
     pType = ProductType.values[_json["pType"]],
     name = _json["name"]
     {
-      (_json["wallets"] as List<dynamic>).map((f) => wallets.add(f as String));
+      (_json["wallets"] as List<dynamic>).forEach(
+        (f) => wallets.add(f as String)
+      );
     }
     
 
@@ -34,10 +35,15 @@ abstract class JProductBase implements JsonableObject{
     'pType':pType.index
   };
 
+  void updateSelf(){
+    getJProductManager().addOne(name, this.toJson());
+  }
+
   //Wallet操作函数
   Future<String> newWallet(String endPoint, WalletType wType);
 
   Future<T> getWallet<T>(String key){
+    if (!wallets.contains(key)) throw JUBR_NO_ITEM;
     return getJWalletManager().getWallet<T>(key);
   }
 }

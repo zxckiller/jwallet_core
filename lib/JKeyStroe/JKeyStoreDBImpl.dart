@@ -28,6 +28,7 @@ class JKeyStoreDBImpl implements JInterfaceKeyStore{
   {
     'kType': _type.index,
   };
+  updateSelf(){}
 
 
   KeyStoreType type(){return _type;}

@@ -14,19 +14,19 @@ class JProductManager with JPresistManager{
   Future<String> newProductHD(String mnmonic,String password)async{
     String name = productDefault;
     JProductHD p = JProductFactory.newProducetHD(mnmonic, password, name);
-    return addOne(name, p.toJson(),false);
+    return addOne(name, p.toJson());
   }
 
   Future<String> newProductBlade(String deviceSN) async{
     String name = productBlade;
     JProductBlade p = JProductFactory.newProductBlade(deviceSN, name);
-    return addOne(name,p.toJson(),false);
+    return addOne(name,p.toJson());
   }
 
   Future<String> newProductImport() async{
     String name = productImport;
     JProductImport p = JProductFactory.newProductImport(name);
-    return addOne(name,p.toJson(),false);
+    return addOne(name,p.toJson());
   }
 
   //获取某一个product
