@@ -3,7 +3,7 @@ import '../JKeyStroe/interface/JInterfaceKeyStore.dart';
 import '../JKeyStroe/JKeyStoreFactory.dart';
 import '../JsonableObject.dart';
 
-enum WalletType { BTC, ETH}
+enum WalletType {BTC, ETH}
 
 abstract class JWalletBase implements JsonableObject{
   String name;

@@ -1,16 +1,19 @@
 import './interface/JInterfaceKeyStore.dart';
 import './JKeyStoreBladeImpl.dart';
 import './JKeyStoreDBImpl.dart';
+import '../Error.dart';
 
 class JKeyStoreFactory{
-  static JInterfaceKeyStore fromType(KeyStoreType type){
+  static JInterfaceKeyStore fromType(KeyStoreType type,{String mnmonic,String password,String deviceSN}){
     JInterfaceKeyStore keystore;
     switch (type) {
       case KeyStoreType.Blade:
-        keystore = new JKeyStoreBladeImpl();
+        if(deviceSN == null) throw JUBR_ARGUMENTS_BAD;
+        keystore = new JKeyStoreBladeImpl(deviceSN);
         break;
       case KeyStoreType.LocalDB:
-        keystore = new JKeyStoreDBImpl();
+        if(mnmonic == null || password == null) throw JUBR_ARGUMENTS_BAD;
+        keystore = new JKeyStoreDBImpl(mnmonic,password);
         break;
       default:
     }

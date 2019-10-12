@@ -3,19 +3,23 @@ import '../Error.dart';
 
 class JKeyStoreBladeImpl implements JInterfaceKeyStore{
   KeyStoreType _type;
+  String _deviceSN;
 
   //默认构造函数
-  JKeyStoreBladeImpl(){
+  JKeyStoreBladeImpl(String deviceSN){
       _type = KeyStoreType.Blade;
+      _deviceSN = deviceSN;
   }
 
   //Json构造函数
   JKeyStoreBladeImpl.fromJson(Map<String, dynamic> json):
-  _type = KeyStoreType.values[json["keyStore"]["kType"]];
+  _type = KeyStoreType.values[json["keyStore"]["kType"]],
+  _deviceSN = json["deviceSN"];
 
   Map<String, dynamic> toJson() =>
   {
     'kType': _type.index,
+    'deviceSN': _deviceSN
   };
 
   Map<String, dynamic> toJsonKey() =>

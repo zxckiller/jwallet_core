@@ -7,17 +7,20 @@ import 'dart:convert';
 
 class JWalletManager with JPresistManager{
 
-  Future<String> newWalletFromParm(String endPoint,WalletType wType,KeyStoreType kType) async{  
-    JWalletBase wallet = JWalletFactory.fromParam(endPoint, wType, kType);
+  //创建一个新钱包
+  Future<String> newWalletFromParm(String endPoint,WalletType wType,KeyStoreType kType,{String mnmonic,String password,String deviceSN}) async{  
+    JWalletBase wallet = JWalletFactory.fromParam(endPoint, wType, kType,mnmonic:mnmonic,password:password,deviceSN:deviceSN);
     return addOne(json.encode(wallet.toJsonKey()),wallet.toJson());  
   }
 
-  Future<JWalletBase> getWallet(String key) async{
+  //获取某一个钱包
+  Future<T> getWallet<T>(String key) async{
     var jsonObj = await getOne(key);
-    JWalletBase wallet = JWalletFactory.fromJson(jsonObj);
-    return Future<JWalletBase>.value(wallet); 
+    JWalletBase p = JWalletFactory.fromJson(jsonObj);
+    return Future<T>.value(p as T); 
   }
 
+  //通过钱包类型枚举钱包
   Future<Set<String>> enumWalletsByWalletType([WalletType wType]) async{
     Set<String> allWallts = await enumAll();
     Set<String> tagetWallets = new Set<String>();
@@ -32,6 +35,7 @@ class JWalletManager with JPresistManager{
     return Future<Set<String>>.value(tagetWallets);
   }
 
+  //通过keystore类型枚举钱包
   Future<Set<String>> enumWalletsByKeyStoreType([KeyStoreType kType]) async{
     Set<String> allWallts = await enumAll();
     Set<String> tagetWallets = new Set<String>();
