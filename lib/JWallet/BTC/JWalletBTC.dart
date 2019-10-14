@@ -1,11 +1,17 @@
 import '../JWalletBase.dart';
 import './interface/JInterfaceBTC.dart';
 import '../../JKeyStroe/interface/JInterfaceKeyStore.dart';
+import 'package:jubiter_plugin/gen/Jub_Common.pb.dart';
+import 'package:jubiter_plugin/gen/Jub_Common.pbenum.dart';
+import 'package:jubiter_plugin/gen/Jub_Common.pbserver.dart';
 
 class JWalletBTC extends JWalletBase with JInterfaceBTC{
+  static CURVES curve = CURVES.secp256k1;
+  static String defaultPath = "m/44'/0'/0'";
 
   JWalletBTC(String endPoint,JInterfaceKeyStore keyStoreimpl):super(endPoint,keyStoreimpl){
     wType = WalletType.BTC;
+    mainPath = defaultPath;
   }
 
   //Json构造函数

@@ -11,9 +11,9 @@ const productImport  = "productImport";
 
 class JProductManager with JPresistManager{
 
-  Future<String> newProductHD(String mnmonic,String password)async{
+  Future<String> newProductHD(String mnmonic,String passpahse,String password)async{
     String name = productDefault;
-    JProductHD p = JProductFactory.newProducetHD(mnmonic, password, name);
+    JProductHD p = JProductFactory.newProducetHD(mnmonic, passpahse,password, name);
     return addOne(name, p.toJson());
   }
 

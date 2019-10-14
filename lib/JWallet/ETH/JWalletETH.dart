@@ -2,10 +2,22 @@ import '../JWalletBase.dart';
 import './interface/JInterfaceETH.dart';
 import '../../JKeyStroe/interface/JInterfaceKeyStore.dart';
 
+import 'package:jubiter_plugin/gen/Jub_Ethereum.pb.dart';
+import 'package:jubiter_plugin/gen/Jub_Ethereum.pbenum.dart';
+import 'package:jubiter_plugin/gen/Jub_Ethereum.pbjson.dart';
+import 'package:jubiter_plugin/gen/Jub_Ethereum.pbserver.dart';
+
+import 'package:jubiter_plugin/gen/Jub_Common.pb.dart';
+import 'package:jubiter_plugin/gen/Jub_Common.pbenum.dart';
+import 'package:jubiter_plugin/gen/Jub_Common.pbserver.dart';
+
 class JWalletETH extends JWalletBase with JInterfaceETH{
+   static CURVES curve = CURVES.secp256k1;
+   static String defaultPath = "m/44'/60'/0'";
 
   JWalletETH(String endPoint,JInterfaceKeyStore keyStoreimpl):super(endPoint,keyStoreimpl){
     wType = WalletType.ETH;
+    mainPath = defaultPath;
   }
 
    //Json构造函数
@@ -23,5 +35,5 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
   }
 
 
-  String getAddress(){return "0x4087A8Dbd2A8376b57Eecdfc4F3E92339e8E9aE0";}
+  String getAddress(Bip32Path path){return "0x4087A8Dbd2A8376b57Eecdfc4F3E92339e8E9aE0";}
 }

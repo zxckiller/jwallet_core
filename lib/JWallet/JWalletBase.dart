@@ -10,11 +10,20 @@ import 'dart:convert';
 enum WalletType {BTC, ETH}
 
 abstract class JWalletBase extends JsonableObject{
+  //钱包名
   String name;
+  //网络入口                 
   String _endPoint;
+  //钱包类型，子类设置
   WalletType wType;
+  //keyStore类型
   JInterfaceKeyStore keyStore;
+  //uuid
   String uuid;
+  //main_path
+  String mainPath;
+  //临时的contexID，不需要持久化
+  int contextID;
   JWalletBase(String endPoint,JInterfaceKeyStore keyStoreimpl){
     _endPoint = endPoint;
     keyStore = keyStoreimpl;
@@ -25,9 +34,10 @@ abstract class JWalletBase extends JsonableObject{
   JWalletBase.fromJson(Map<String, dynamic> json):
     wType = WalletType.values[json["wType"]],
     _endPoint = json["endPoint"],
-    uuid = json["uuid"]
+    uuid = json["uuid"],
+    mainPath = json["mainPath"]
   {
-    keyStore = JKeyStoreFactory.fromJson(json);
+    keyStore = JKeyStoreFactory.fromJson(json["keyStore"]);
   }
 
   Map<String, dynamic> toJson() =>
@@ -35,7 +45,8 @@ abstract class JWalletBase extends JsonableObject{
     'wType': wType.index,
     'keyStore' : keyStore,
     'endPoint' : _endPoint,
-    'uuid' : uuid
+    'uuid' : uuid,
+    'mainPath' : mainPath
   };
 
   Map<String, dynamic> toJsonKey() =>
@@ -47,6 +58,10 @@ abstract class JWalletBase extends JsonableObject{
 
   void updateSelf(){
     getJWalletManager().addOne(json.encode(this.toJsonKey()), this.toJson());
+  }
+
+  Future<bool> init() async{
+    return keyStore.init();
   }
   
 }

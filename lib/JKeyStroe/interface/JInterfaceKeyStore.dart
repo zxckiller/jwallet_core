@@ -6,5 +6,5 @@ abstract class JInterfaceKeyStore implements JsonableObject{
   KeyStoreType type();
   String connectDevice();
   String openDB();
-
+  Future<bool> init();
 }

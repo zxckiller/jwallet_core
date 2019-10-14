@@ -4,10 +4,12 @@ import '../jwallet_core.dart';
 class JProductHD extends JProductBase{
   String _mnmonic;
   String _password;
-  JProductHD(String mnmonic,String password,String name):super(name){
+  String _passphase;
+  JProductHD(String mnmonic,String passphase,String password,String name):super(name){
     pType = ProductType.HD;
     _mnmonic = mnmonic;
     _password = password;
+    _passphase = passphase;
   }
 
   
@@ -17,6 +19,7 @@ class JProductHD extends JProductBase{
     //构造子类特有数据
     _mnmonic = json["mnmonic"];
     _password = json["password"];
+    _passphase = json["passphase"];
   }
 
   @override
@@ -25,12 +28,13 @@ class JProductHD extends JProductBase{
     //增加子类的json化数据，地址、历史等等
     json["mnmonic"] = _mnmonic;
     json["password"] = _password;
+    json["passphase"] = _passphase;
     return json;
   }
 
   @override
   Future<String> newWallet(String endPoint, WalletType wType) async{
-    String key = await getJWalletManager().newWalletFromParm(endPoint, wType, KeyStoreType.LocalDB,mnmonic:_mnmonic,password: _password);
+    String key = await getJWalletManager().newWalletFromParm(endPoint, wType, KeyStoreType.LocalDB,mnmonic:_mnmonic,passphase:_passphase, password: _password);
     wallets.add(key);
     updateSelf();
     return Future<String>.value(key);

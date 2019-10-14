@@ -3,13 +3,16 @@ import './JxManager.dart';
 import './JWallet/JWalletBase.dart';
 import './JWallet/JWalletFactory.dart';
 import 'dart:convert';
+import './Error.dart';
 
 
 class JWalletManager with JPresistManager{
 
   //创建一个新钱包
-  Future<String> newWalletFromParm(String endPoint,WalletType wType,KeyStoreType kType,{String mnmonic,String password,String deviceSN}) async{  
-    JWalletBase wallet = JWalletFactory.fromParam(endPoint, wType, kType,mnmonic:mnmonic,password:password,deviceSN:deviceSN);
+  Future<String> newWalletFromParm(String endPoint,WalletType wType,KeyStoreType kType,{String mnmonic,String passphase,String password,String deviceSN}) async{  
+    JWalletBase wallet = JWalletFactory.fromParam(endPoint, wType, kType,mnmonic:mnmonic,passphase:passphase,password:password,deviceSN:deviceSN);
+    bool success = await wallet.init();
+    if(!success) throw JUBR_ERROR;
     return addOne(json.encode(wallet.toJsonKey()),wallet.toJson());  
   }
 

@@ -6,15 +6,17 @@ import '../JKeyStroe/JKeyStoreFactory.dart';
 
 class JWalletFactory{
 
-  //参数列表把软硬的混起来了，这样处理并不合理，需要优化，但还没更好的方法。 此函数不对外，暂时先这样处理。
-  static JWalletBase fromParam(String endPoint,WalletType wType,KeyStoreType kType,{String mnmonic,String password,String deviceSN}){
+  //Factory参数列表把软硬的混起来了，这样处理并不合理，需要优化，但还没更好的方法。 此函数不对外，暂时先这样处理。
+  static JWalletBase fromParam(String endPoint,WalletType wType,KeyStoreType kType,{String mnmonic,String passphase,String password,String deviceSN}){
     JWalletBase wallet;
-    JInterfaceKeyStore keyStore = JKeyStoreFactory.fromType(kType,mnmonic:mnmonic,password:password,deviceSN:deviceSN);
+    JInterfaceKeyStore keyStore;
     switch (wType) {
       case WalletType.BTC:
+        keyStore = JKeyStoreFactory.fromType(kType,mnmonic:mnmonic,passphase:passphase,password:password,cruve:JWalletBTC.curve,deviceSN:deviceSN);
         wallet = new JWalletBTC(endPoint,keyStore);
         break;
       case WalletType.ETH:
+        keyStore = JKeyStoreFactory.fromType(kType,mnmonic:mnmonic,passphase:passphase,password:password,cruve:JWalletETH.curve,deviceSN:deviceSN);
         wallet = new JWalletETH(endPoint,keyStore);
         break;
       default:

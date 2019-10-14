@@ -13,7 +13,7 @@ class JKeyStoreBladeImpl implements JInterfaceKeyStore{
 
   //Json构造函数
   JKeyStoreBladeImpl.fromJson(Map<String, dynamic> json):
-  _type = KeyStoreType.values[json["keyStore"]["kType"]],
+  _type = KeyStoreType.values[json["kType"]],
   _deviceSN = json["deviceSN"];
 
   Map<String, dynamic> toJson() =>
@@ -33,6 +33,7 @@ class JKeyStoreBladeImpl implements JInterfaceKeyStore{
   KeyStoreType type(){return _type;}
   String connectDevice(){return "Jubiter Blade";}
   String openDB(){throw JUBR_IMPL_NOT_SUPPORT;}
+  Future<bool> init() async{return Future<bool>.value(true);}
 
 
 }
