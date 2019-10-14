@@ -36,7 +36,7 @@ abstract class JProductBase extends JsonableObject{
   };
 
   void updateSelf(){
-    getJProductManager().addOne(name, this.toJson());
+    getJProductManager().updateOne(name, this.toJson());
   }
 
   //Wallet操作函数
@@ -46,4 +46,6 @@ abstract class JProductBase extends JsonableObject{
     if (!wallets.contains(key)) throw JUBR_NO_ITEM;
     return getJWalletManager().getWallet<T>(key);
   }
+
+  List<String> enumWallet(){return wallets;}
 }

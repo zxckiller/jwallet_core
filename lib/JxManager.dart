@@ -4,13 +4,24 @@ import 'dart:convert';
 
 mixin JPresistManager{
 
+//增
   Future<String> addOne(String key,Map<String,dynamic> value) async{
+    SharedPreferences prefs =  await SharedPreferences.getInstance();
+    bool already = prefs.containsKey(key);
+    if(already) throw JUBR_ALREADY_EXITS;
+    bool success = await prefs.setString(key, json.encode(value));
+    if(success) return Future<String>.value(key);
+    else throw JUBR_HOST_MEMORY;
+  }
+//改
+  Future<String> updateOne(String key,Map<String,dynamic> value)async{
     SharedPreferences prefs =  await SharedPreferences.getInstance();
     bool success = await prefs.setString(key, json.encode(value));
     if(success) return Future<String>.value(key);
     else throw JUBR_HOST_MEMORY;
   }
 
+//查
   Future<Map<String,dynamic>> getOne(String key) async{
     SharedPreferences prefs =  await SharedPreferences.getInstance();
     String value = prefs.getString(key);
@@ -19,6 +30,7 @@ mixin JPresistManager{
     return json.decode(value); 
   }
 
+//删
   Future<bool> deleteOne(String key) async{
     SharedPreferences prefs =  await SharedPreferences.getInstance();
     return prefs.remove(key);

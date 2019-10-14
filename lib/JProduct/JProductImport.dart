@@ -21,6 +21,7 @@ class JProductImport extends JProductBase{
   Future<String> newWalletFromMnmonic(String endPoint, WalletType wType, String mnmoinc, String password)async{
     String key = await getJWalletManager().newWalletFromParm(endPoint, wType, KeyStoreType.LocalDB,mnmonic:mnmoinc,password: password);
     wallets.add(key);
+    updateSelf();
     return Future<String>.value(key);
   }
 

@@ -1,5 +1,6 @@
 library jwallet_core;
 import 'package:get_it/get_it.dart';
+import 'package:jwallet_core/JKeyStroe/JKeyStoreDBImpl.dart';
 import './JWalletManager.dart';
 import './JProductManager.dart';
 
@@ -7,6 +8,10 @@ import './JProductManager.dart';
 import './JProduct/JProductHD.dart';
 import './JProduct/JProductBlade.dart';
 import './JProduct/JProductImport.dart';
+
+import 'package:jubiter_plugin/gen/Jub_Common.pb.dart';
+import 'package:jubiter_plugin/gen/Jub_Common.pbenum.dart';
+import 'package:jubiter_plugin/gen/Jub_Common.pbserver.dart';
 
 export './JWalletManager.dart';
 export './JWallet/JWalletBase.dart';
@@ -17,6 +22,10 @@ export './JWallet/ETH/JWalletETH.dart';
 export './JProduct/JProductBlade.dart';
 export './JProduct/JProductHD.dart';
 export './JProduct/JProductImport.dart';
+
+export 'package:jubiter_plugin/gen/Jub_Common.pb.dart';
+export 'package:jubiter_plugin/gen/Jub_Common.pbenum.dart';
+export 'package:jubiter_plugin/gen/Jub_Common.pbserver.dart';
 
 final getIt = GetIt.instance;
 
@@ -47,3 +56,6 @@ Future<JProductImport> getJProductImport() async{
 
 //一些上层需要直接使用的全局函数
 
+Future<ResultString> generateMnemonic(ENUM_MNEMONIC_STRENGTH strenth) async{
+  return JKeyStoreDBImpl.generateMnemonic(strenth);
+}

@@ -1,5 +1,9 @@
 import "./interface/JInterfaceKeyStore.dart";
 import '../Error.dart';
+import 'package:jubiter_plugin/gen/Jub_Common.pb.dart';
+import 'package:jubiter_plugin/gen/Jub_Common.pbenum.dart';
+import 'package:jubiter_plugin/gen/Jub_Common.pbserver.dart';
+import 'package:jubiter_plugin/jubiter_plugin.dart';
 
 class JKeyStoreDBImpl implements JInterfaceKeyStore{
   KeyStoreType _type;
@@ -33,9 +37,18 @@ class JKeyStoreDBImpl implements JInterfaceKeyStore{
 
   KeyStoreType type(){return _type;}
   String connectDevice(){throw JUBR_IMPL_NOT_SUPPORT;}
-  String openDB(){return "DB Store";}
+  String openDB(){return "DB Store";}  
 
 
 
+
+  static Future<ResultString> generateMnemonic(ENUM_MNEMONIC_STRENGTH strenth) async{
+    ResultString mnemonicResult = await JuBiterWallet.generateMnemonic(strenth);
+    return Future<ResultString>.value(mnemonicResult);
+  }
+
+  static checkMnmonic(String mnemonic){
+    return JuBiterWallet.checkMnemonic(mnemonic);
+  }
 
 }
