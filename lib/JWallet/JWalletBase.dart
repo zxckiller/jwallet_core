@@ -63,5 +63,6 @@ abstract class JWalletBase extends JsonableObject{
   Future<bool> init() async{
     return keyStore.init();
   }
+  Future<bool> active({String deviceSN,int deviceID});
   
 }

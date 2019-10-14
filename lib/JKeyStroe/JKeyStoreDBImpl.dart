@@ -50,8 +50,6 @@ class JKeyStoreDBImpl implements JInterfaceKeyStore{
 
 
   KeyStoreType type(){return _type;}
-  String connectDevice(){throw JUBR_IMPL_NOT_SUPPORT;}
-  String openDB(){return "DB Store";}  
 
   Future<bool> init() async{
     var seed = await JuBiterWallet.generateSeed(_mnmonic, _passphase);
@@ -62,8 +60,7 @@ class JKeyStoreDBImpl implements JInterfaceKeyStore{
     return Future<bool>.value(true);
   }
 
-
-
+  String getXprv(){return xprv;}
 
   static Future<ResultString> generateMnemonic(ENUM_MNEMONIC_STRENGTH strenth) async{
     ResultString mnemonicResult = await JuBiterWallet.generateMnemonic(strenth);

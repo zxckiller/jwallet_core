@@ -31,9 +31,7 @@ class JKeyStoreBladeImpl implements JInterfaceKeyStore{
 
   //通用函数
   KeyStoreType type(){return _type;}
-  String connectDevice(){return "Jubiter Blade";}
-  String openDB(){throw JUBR_IMPL_NOT_SUPPORT;}
   Future<bool> init() async{return Future<bool>.value(true);}
-
+  String getXprv(){throw JUBR_IMPL_NOT_SUPPORT;}
 
 }

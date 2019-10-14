@@ -27,6 +27,11 @@ export 'package:jubiter_plugin/gen/Jub_Common.pb.dart';
 export 'package:jubiter_plugin/gen/Jub_Common.pbenum.dart';
 export 'package:jubiter_plugin/gen/Jub_Common.pbserver.dart';
 
+export 'package:jubiter_plugin/gen/Jub_Ethereum.pb.dart';
+export 'package:jubiter_plugin/gen/Jub_Ethereum.pbenum.dart';
+export 'package:jubiter_plugin/gen/Jub_Ethereum.pbjson.dart';
+export 'package:jubiter_plugin/gen/Jub_Ethereum.pbserver.dart';
+
 final getIt = GetIt.instance;
 
 //init函数要读数据库，可能时间会长，应该是一个异步函数

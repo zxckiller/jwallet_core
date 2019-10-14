@@ -4,7 +4,6 @@ import 'package:jwallet_core/JsonableObject.dart';
 enum KeyStoreType { Blade, LocalDB}
 abstract class JInterfaceKeyStore implements JsonableObject{
   KeyStoreType type();
-  String connectDevice();
-  String openDB();
   Future<bool> init();
+  String getXprv();
 }
