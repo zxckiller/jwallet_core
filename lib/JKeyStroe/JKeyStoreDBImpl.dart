@@ -67,7 +67,7 @@ class JKeyStoreDBImpl implements JInterfaceKeyStore{
     return Future<ResultString>.value(mnemonicResult);
   }
 
-  static checkMnmonic(String mnemonic){
+  static Future<int> checkMnmonic(String mnemonic){
     return JuBiterWallet.checkMnemonic(mnemonic);
   }
 

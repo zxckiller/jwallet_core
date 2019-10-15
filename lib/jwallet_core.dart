@@ -64,3 +64,7 @@ Future<JProductImport> getJProductImport() async{
 Future<ResultString> generateMnemonic(ENUM_MNEMONIC_STRENGTH strenth) async{
   return JKeyStoreDBImpl.generateMnemonic(strenth);
 }
+
+Future<int>  checkMnemonic(String mnemonic) async{
+  return JKeyStoreDBImpl.checkMnmonic(mnemonic);
+}
