@@ -1,5 +1,6 @@
 import '../JsonableObject.dart';
 import '../jwallet_core.dart';
+import '../JWallet/JWalletBase.dart';
 
 enum ProductType {HD, JubiterBlade,Import}
 abstract class JProductBase extends JsonableObject{
@@ -47,5 +48,10 @@ abstract class JProductBase extends JsonableObject{
     return getJWalletManager().getWallet<T>(key);
   }
 
-  List<String> enumWallet(){return wallets;}
+  List<String> enumWallets(){return wallets;}
+
+  Future<List<WalletType>> supportedWalletTypes() async{
+    List<WalletType> list = [WalletType.BTC,WalletType.ETH];
+    return Future<List<WalletType>>.value(list);
+  }
 }
