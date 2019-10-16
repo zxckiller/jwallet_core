@@ -17,4 +17,6 @@ abstract class JInterfaceETH {
   Future<ResultString> getMainHDNode(ENUM_PUB_FORMAT format);
   //获取某个Path的公钥
   Future<ResultString> getHDNode(ENUM_PUB_FORMAT format);
+  //获取钱包余额
+  Future<String> getBalance();
 }

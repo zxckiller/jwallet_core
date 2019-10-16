@@ -1,12 +1,12 @@
-import 'package:jwallet_core/Error.dart';
+import 'package:tuple/tuple.dart';
 
+import 'package:jwallet_core/Error.dart';
 import '../JWalletBase.dart';
 import './interface/JInterfaceETH.dart';
 import '../../JKeyStroe/interface/JInterfaceKeyStore.dart';
 
 import 'package:jubiter_plugin/gen/Jub_Ethereum.pb.dart';
 import 'package:jubiter_plugin/gen/Jub_Ethereum.pbenum.dart';
-import 'package:jubiter_plugin/gen/Jub_Ethereum.pbjson.dart';
 import 'package:jubiter_plugin/gen/Jub_Ethereum.pbserver.dart';
 
 import 'package:jubiter_plugin/gen/Jub_Common.pb.dart';
@@ -16,10 +16,14 @@ import 'package:jubiter_plugin/gen/Jub_Common.pbserver.dart';
 import 'package:jubiter_plugin/jubiter_plugin.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
 
+import './Model/account_info.dart';
+
 class JWalletETH extends JWalletBase with JInterfaceETH{
    static final CURVES curve = CURVES.secp256k1;
    static final String defaultPath = "m/44'/60'/0'";
    static final int chainID = 0;
+
+   final String accountInfoUrl = "/api/v2/queryAccountInfoByAddr";
 
    String _address;
 
@@ -91,4 +95,25 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     path.addressIndex = $fixnum.Int64(0);
     return await JuBiterEthereum.getHDNode(contextID, format, path);
   } 
+
+  //通用的获取AccountInfo的方法
+  Future<AccountInfo> _getAccountInfo(String address) async{
+    String url = endPoint + accountInfoUrl;
+    Map<String,String> params = new Map<String,String>();
+    //params["address"] = _address;
+    params["address"] = "0xc874c758c0bf07f003cff4ddf1d964560138ba79"; //for test
+    var response = await httpPost(url,params);
+    var accountInfo = AccountInfo.fromJson(response);
+    return Future<AccountInfo>.value(accountInfo);
+  }
+
+  Future<String> getBalance() async{
+    var accountInfo = await _getAccountInfo(_address);
+    return Future<String>.value(accountInfo.data.balance);
+  }
+
+  Future<Tuple2<int,int>> getNonce() async{
+    var accountInfo = await _getAccountInfo(_address);
+    return Future<Tuple2<int,int>>.value(Tuple2<int,int>(int.parse(accountInfo.data.nonce),int.parse(accountInfo.data.localNonce)));
+  }
 }
