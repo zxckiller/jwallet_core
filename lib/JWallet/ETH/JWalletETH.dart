@@ -82,7 +82,8 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     return Future<String>.value(_address);
   }
 
-  Future<ResultString> signTX(TransactionETH txInfo) async{
+  Future<ResultString> signTX(String password,TransactionETH txInfo) async{
+    if(! await keyStore.verifyPin(password)) throw JUBR_WRONG_PASSWORD;
     return await JuBiterEthereum.signTransaction(contextID, txInfo);
   }
   Future<ResultString> getMainHDNode(ENUM_PUB_FORMAT format)async{

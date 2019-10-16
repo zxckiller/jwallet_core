@@ -62,6 +62,9 @@ class JKeyStoreDBImpl implements JInterfaceKeyStore{
 
   String getXprv(){return xprv;}
 
+  //后期xprv应该是被pin加密起来的，验pin通过需要解密xprv
+  Future<bool> verifyPin(String password){return Future<bool>.value(password == _password);}
+
   static Future<ResultString> generateMnemonic(ENUM_MNEMONIC_STRENGTH strenth) async{
     ResultString mnemonicResult = await JuBiterWallet.generateMnemonic(strenth);
     return Future<ResultString>.value(mnemonicResult);

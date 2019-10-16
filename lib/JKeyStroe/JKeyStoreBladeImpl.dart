@@ -33,5 +33,5 @@ class JKeyStoreBladeImpl implements JInterfaceKeyStore{
   KeyStoreType type(){return _type;}
   Future<bool> init() async{return Future<bool>.value(true);}
   String getXprv(){throw JUBR_IMPL_NOT_SUPPORT;}
-
+  Future<bool> verifyPin(String password){return Future<bool>.value(true);}
 }
