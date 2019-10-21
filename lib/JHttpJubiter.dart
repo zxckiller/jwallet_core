@@ -7,12 +7,15 @@ mixin JHttpJubiter{
   Future<Map<String,dynamic>> httpPost(String url,Map<String,String> parmas) async{
     String uriParams = "";
     parmas.forEach((k,v){
-        uriParams += k;
-        uriParams += "=";
-        uriParams += v;
-        uriParams += "&";
+        if(v != null){
+          uriParams += k;
+          uriParams += "=";
+          uriParams += v;
+          uriParams += "&";
+        }
     });
-    uriParams = uriParams.substring(0,uriParams.length-1);
+    if(parmas.length != 0) uriParams = uriParams.substring(0,uriParams.length-1);
+    
     var header = Map<String,String>();
     header['Content-Type'] = "application/x-www-form-urlencoded";
     var response = await http.post(url,headers:header,body:uriParams);

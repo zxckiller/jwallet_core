@@ -18,10 +18,14 @@ export './JWallet/JWalletBase.dart';
 export './JKeyStroe/interface/JInterfaceKeyStore.dart';
 export './Error.dart';
 export './JWallet/BTC/JWalletBTC.dart';
-export './JWallet/ETH/JWalletETH.dart';
 export './JProduct/JProductBlade.dart';
 export './JProduct/JProductHD.dart';
 export './JProduct/JProductImport.dart';
+export './JProduct/JProductBase.dart';
+
+
+export './JWallet/ETH/JWalletETH.dart';
+export './JWallet/ETH/Model/e_r_c20_token_info.dart';
 
 export 'package:jubiter_plugin/gen/Jub_Common.pb.dart';
 export 'package:jubiter_plugin/gen/Jub_Common.pbenum.dart';
