@@ -58,8 +58,8 @@ abstract class JWalletBase extends JsonableObject with JHttpJubiter{
     'uuid' : uuid
   };
 
-  void updateSelf(){
-    getJWalletManager().updateOne(json.encode(this.toJsonKey()), this.toJson());
+  void updateSelf() async{
+    await getJWalletManager().updateOne(json.encode(this.toJsonKey()), this.toJson());
   }
 
   Future<bool> init() async{

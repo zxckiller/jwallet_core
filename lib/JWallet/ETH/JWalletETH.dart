@@ -18,6 +18,7 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 
 import './Model/account_info.dart';
 import './Model/e_r_c20_token_info.dart' as $erc20;
+import './Model/e_t_h_history.dart' as $history;
 
 class JWalletETH extends JWalletBase with JInterfaceETH{
    static final CURVES curve = CURVES.secp256k1;
@@ -25,8 +26,10 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
    static final int chainID = 0;
 
    List<$erc20.Data> _addedERC20Tokens = new List<$erc20.Data>();
+   List<$history.TxList> _txList = new List<$history.TxList>();
    final String accountInfoUrl = "/api/v2/queryAccountInfoByAddr";
    final String erc20Info = "/api/v2/queryTokensByNameOrAddr";
+   final String historyUrl = "/api/v2/queryTransactionsByAddrs/breif";
 
    String _address;
 
@@ -42,6 +45,10 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
       (json["addedERC20Tokens"] as List<dynamic>).forEach(
         (f) => _addedERC20Tokens.add($erc20.Data.fromJson(f))
       );
+
+      (json["txList"] as List<dynamic>).forEach(
+        (f) => _txList.add($history.TxList.fromJson(f))
+      );
   }
   
   @override
@@ -49,6 +56,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     Map<String, dynamic> json = super.toJson();
     //增加子类的json化数据，地址、历史等等
     json["addedERC20Tokens"] = _addedERC20Tokens;
+    json["txList"] = _txList;
     return json;
   }
   Future<bool> active({String deviceSN,int deviceID}) async{
@@ -147,7 +155,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
   }
   //添加ERC20代币
   void addERC20Token($erc20.Data token){
-    //简单的查重，不清楚dart有没有重载运算符==，待优化
+    //简单的查重，可以改成重载==，待优化
     _addedERC20Tokens.forEach((f){
       if(f.tokenAddr == token.tokenAddr) throw JUBR_ALREADY_EXITS;
     });
@@ -158,6 +166,42 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
   void delERC20Token($erc20.Data token){
     _addedERC20Tokens.remove(token);
     updateSelf();
+  }
+
+  //查询本地交易历史，暂时只支持ETH，回头统一改
+
+  List<$history.TxList> getLocalHistory(){
+    return _txList;
+  }
+
+  //查询网络交易历史
+  Future<List<$history.TxList>> getCloudHistory(int pageSize,{$erc20.Data tokenInfo,$history.TxList lastTX}) async{
+    String url = endPoint + historyUrl;
+    Map<String,String> params = new Map<String,String>();
+    params["address"] = _address;
+    params["pageSize"] = pageSize.toString();
+    //不知道有什么优雅的写法没，双问号？
+    if(tokenInfo != null){
+      params["contractAddress"] = tokenInfo.tokenAddr;
+    }
+    if(lastTX != null){
+      params["blockIndex"] = lastTX.blkIndex.toString();
+      params["txIndex"] = lastTX.txIndex.toString();
+    }
+
+    var response = await httpPost(url,params);
+    $history.ETHHistory history = $history.ETHHistory.fromJson(response);
+    List<$history.TxList> allHistory = new List<$history.TxList>();
+    //如果是第一次查，把mempool也加上
+    if(lastTX == null) allHistory += history.data.mempoolTxs.txList;
+
+    allHistory += history.data.blockTxs.txList;
+    //如果是ETH第一次查，存起来
+    if(tokenInfo ==null && lastTX == null){
+      _txList = allHistory;
+      await updateSelf();
+    }
+    return Future<List<$history.TxList>>.value(allHistory);
   }
 
 }

@@ -16,7 +16,9 @@ mixin JPresistManager{
 //改
   Future<String> updateOne(String key,Map<String,dynamic> value)async{
     SharedPreferences prefs =  await SharedPreferences.getInstance();
+    var str = json.encode(value);
     bool success = await prefs.setString(key, json.encode(value));
+    String tt = prefs.getString(key);
     if(success) return Future<String>.value(key);
     else throw JUBR_HOST_MEMORY;
   }

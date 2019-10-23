@@ -178,7 +178,7 @@ packages:
       name: glob
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.7"
+    version: "1.2.0"
   graphs:
     dependency: transitive
     description:
@@ -247,7 +247,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "7428df119c931fbc929105200e2cbf39ddf78b1f"
+      resolved-ref: "48612ad4a39b0c7d5758db106d1cbc02ab635161"
       url: "https://github.com/CubeFeng/JuBiter-Plugin.git"
     source: git
     version: "0.0.1"
@@ -293,6 +293,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.6+3"
+  node_interop:
+    dependency: transitive
+    description:
+      name: node_interop
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
+  node_io:
+    dependency: transitive
+    description:
+      name: node_io
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1+2"
   package_config:
     dependency: transitive
     description:
@@ -362,7 +376,7 @@ packages:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.3+4"
+    version: "0.5.4"
   shelf:
     dependency: transitive
     description:
@@ -496,4 +510,4 @@ packages:
     version: "2.2.0"
 sdks:
   dart: ">=2.3.0 <3.0.0"
-  flutter: ">=1.5.0 <2.0.0"
+  flutter: ">=1.6.7 <2.0.0"
