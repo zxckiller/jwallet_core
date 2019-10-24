@@ -50,6 +50,7 @@ class JKeyStoreDBImpl implements JInterfaceKeyStore{
 
 
   KeyStoreType type(){return _type;}
+  String getUUID(){throw JUBR_IMPL_NOT_SUPPORT;}
 
   Future<bool> init() async{
     var seed = await JuBiterWallet.generateSeed(_mnmonic, _passphase);
@@ -63,7 +64,9 @@ class JKeyStoreDBImpl implements JInterfaceKeyStore{
   String getXprv(){return xprv;}
 
   //后期xprv应该是被pin加密起来的，验pin通过需要解密xprv
-  Future<bool> verifyPin(String password){return Future<bool>.value(password == _password);}
+  Future<bool> verifyPin(int contextID,String password){
+    return Future<bool>.value(password == _password);
+  }
 
   static Future<ResultString> generateMnemonic(ENUM_MNEMONIC_STRENGTH strenth) async{
     ResultString mnemonicResult = await JuBiterWallet.generateMnemonic(strenth);

@@ -59,10 +59,34 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     json["txList"] = _txList;
     return json;
   }
-  Future<bool> active({String deviceSN,int deviceID}) async{
+  Future<bool> active({String uuid,int deviceID}) async{
     switch (keyStore.type()) {
+      
       case KeyStoreType.Blade:
-        return Future<bool>.value(true);
+      {
+        if(uuid == null || deviceID == null) return Future<bool>.value(false);
+        if(uuid != keyStore.getUUID()) return Future<bool>.value(false);
+        ContextCfgETH config = ContextCfgETH.create();
+        config.chainID = chainID;
+        config.mainPath = mainPath;
+        ResultInt contextResult = await JuBiterEthereum.createContext(config,deviceID);
+        if(contextResult.stateCode == JUBR_OK){
+          //dart catch不住await里面的异常，怎么才能实现同步的在_getAddressFromKeystore出错的时候，返回false？现在只能把这些代码写成一坨放在这
+          contextID = contextResult.value;
+          Bip32Path path = Bip32Path.create();
+          path.change = false;
+          path.addressIndex = $fixnum.Int64(0);
+          ResultString address = await JuBiterEthereum.getAddress(contextID, path, false);
+          if(address.stateCode == JUBR_OK){
+            //_address = address.value;
+            _address ="0xc874c758c0bf07f003cff4ddf1d964560138ba79";//for_test
+          }else return Future<bool>.value(false);
+          return Future<bool>.value(true);
+        }else{
+          return Future<bool>.value(false);
+        }
+      }
+      break;
       case KeyStoreType.LocalDB:
       {
         String xprv = keyStore.getXprv();
@@ -70,6 +94,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
         config.chainID = chainID;
         config.mainPath = mainPath;
         ResultInt contextResult = await JuBiterEthereum.createContext_Software(config,xprv);
+
         if(contextResult.stateCode == JUBR_OK){
           contextID = contextResult.value;
           Bip32Path path = Bip32Path.create();
@@ -92,13 +117,24 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     }
   }
 
+  Future<String> _getAddressFromKeystore()async{
+    Bip32Path path = Bip32Path.create();
+    path.change = false;
+    path.addressIndex = $fixnum.Int64(0);
+    ResultString address = await JuBiterEthereum.getAddress(contextID, path, false);
+    if(address.stateCode == JUBR_OK){
+      //_address = address.value;
+      _address ="0xc874c758c0bf07f003cff4ddf1d964560138ba79";//for_test
+      return Future<String>.value(_address);
+    }else throw address.stateCode;
+  }
 
   Future<String> getAddress() async{
     return Future<String>.value(_address);
   }
 
   Future<ResultString> signTX(String password,TransactionETH txInfo) async{
-    if(! await keyStore.verifyPin(password)) throw JUBR_WRONG_PASSWORD;
+    if(! await keyStore.verifyPin(contextID,password)) throw JUBR_WRONG_PASSWORD;
     return await JuBiterEthereum.signTransaction(contextID, txInfo);
   }
   Future<ResultString> getMainHDNode(ENUM_PUB_FORMAT format)async{

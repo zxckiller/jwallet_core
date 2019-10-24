@@ -7,23 +7,23 @@ import 'package:jubiter_plugin/gen/google/protobuf/any.pb.dart';
 
 class JKeyStoreBladeImpl implements JInterfaceKeyStore{
   KeyStoreType _type;
-  String _deviceSN;
+  String _uuid;
 
   //默认构造函数
-  JKeyStoreBladeImpl(String deviceSN){
+  JKeyStoreBladeImpl(String uuid){
       _type = KeyStoreType.Blade;
-      _deviceSN = deviceSN;
+      _uuid = uuid;
   }
 
   //Json构造函数
   JKeyStoreBladeImpl.fromJson(Map<String, dynamic> json):
   _type = KeyStoreType.values[json["kType"]],
-  _deviceSN = json["deviceSN"];
+  _uuid = json["uuid"];
 
   Map<String, dynamic> toJson() =>
   {
     'kType': _type.index,
-    'deviceSN': _deviceSN
+    'uuid': _uuid
   };
 
   Map<String, dynamic> toJsonKey() =>
@@ -35,9 +35,14 @@ class JKeyStoreBladeImpl implements JInterfaceKeyStore{
 
   //通用函数
   KeyStoreType type(){return _type;}
+  String getUUID(){return _uuid;}
   Future<bool> init() async{return Future<bool>.value(true);}
   String getXprv(){throw JUBR_IMPL_NOT_SUPPORT;}
-  Future<bool> verifyPin(String password){return Future<bool>.value(true);}
+  Future<bool> verifyPin(int contextID,String password) async{
+    var rv = await JuBiterWallet.verifyPIN(contextID, password);
+    if(rv.stateCode != JUBR_OK) return Future<bool>.value(false);
+    return Future<bool>.value(true);
+  }
 
   //蓝牙相关函数
   static Future<int> initDevice() async {

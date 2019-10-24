@@ -27,7 +27,8 @@ class JWalletBTC extends JWalletBase with JInterfaceBTC{
     json["btc"] = "1234";
     return json;
   }
-  Future<bool> active({String deviceSN,int deviceID}){return Future<bool>.value(true);}
+
+  Future<bool> active({String uuid,int deviceID}){return Future<bool>.value(true);}
 
   String getAddress(){return "392V6RoNm9Mu3TvQfuAb458iRTCMokht9U";}
 }

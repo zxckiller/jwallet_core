@@ -8,6 +8,8 @@ import '../JsonableObject.dart';
 import '../jwallet_core.dart';
 import 'dart:convert';
 
+import 'package:jubiter_plugin/jubiter_plugin.dart';
+
 enum WalletType {BTC, ETH}
 
 abstract class JWalletBase extends JsonableObject with JHttpJubiter{
@@ -66,6 +68,10 @@ abstract class JWalletBase extends JsonableObject with JHttpJubiter{
     return keyStore.init();
   }
   
-  Future<bool> active({String deviceSN,int deviceID});
+  Future<bool> active({String uuid,int deviceID});
+
+  Future<int> showVirtualPWD() async {
+    return JuBiterPlugin.showVirtualPWD(contextID);
+  }
   
 }

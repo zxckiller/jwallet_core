@@ -17,9 +17,9 @@ class JProductManager with JPresistManager{
     return addOne(name, p.toJson());
   }
 
-  Future<String> newProductBlade(String deviceSN) async{
+  Future<String> newProductBlade(String uuid) async{
     String name = productBlade;
-    JProductBlade p = JProductFactory.newProductBlade(deviceSN, name);
+    JProductBlade p = JProductFactory.newProductBlade(uuid, name);
     return addOne(name,p.toJson());
   }
 
