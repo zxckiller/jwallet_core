@@ -1,5 +1,6 @@
 library jwallet_core;
 import 'package:get_it/get_it.dart';
+import 'package:jwallet_core/JKeyStroe/JKeyStoreBladeImpl.dart';
 import 'package:jwallet_core/JKeyStroe/JKeyStoreDBImpl.dart';
 import './JWalletManager.dart';
 import './JProductManager.dart';
@@ -8,6 +9,9 @@ import './JProductManager.dart';
 import './JProduct/JProductHD.dart';
 import './JProduct/JProductBlade.dart';
 import './JProduct/JProductImport.dart';
+
+import 'package:jubiter_plugin/gen/jubiterblue.pbserver.dart';
+import 'package:jubiter_plugin/jubiter_plugin.dart';
 
 import 'package:jubiter_plugin/gen/Jub_Common.pb.dart';
 import 'package:jubiter_plugin/gen/Jub_Common.pbenum.dart';
@@ -35,6 +39,10 @@ export 'package:jubiter_plugin/gen/Jub_Ethereum.pb.dart';
 export 'package:jubiter_plugin/gen/Jub_Ethereum.pbenum.dart';
 export 'package:jubiter_plugin/gen/Jub_Ethereum.pbjson.dart';
 export 'package:jubiter_plugin/gen/Jub_Ethereum.pbserver.dart';
+
+export 'package:jubiter_plugin/gen/jubiterblue.pb.dart';
+export 'package:jubiter_plugin/gen/jubiterblue.pbserver.dart';
+export 'package:jubiter_plugin/gen/jubiterblue.pbenum.dart';
 
 final getIt = GetIt.instance;
 
@@ -72,3 +80,40 @@ Future<ResultString> generateMnemonic(ENUM_MNEMONIC_STRENGTH strenth) async{
 Future<int>  checkMnemonic(String mnemonic) async{
   return JKeyStoreDBImpl.checkMnmonic(mnemonic);
 }
+
+Future<int> initDevice() async{
+  return JKeyStoreBladeImpl.initDevice();
+}
+
+Stream<ScanResult> startScan(Duration timeout) async*{
+  yield* JKeyStoreBladeImpl.startScan(timeout);
+}
+
+Future<int> stopScan() async {
+  return JKeyStoreBladeImpl.stopScan();
+}
+
+Future<int> connect(
+  BluetoothDevice device,
+  Duration timeout,
+  void onConnectStateChange(DeviceStateResponse state),
+  void onError(Object error)) async {
+  return JKeyStoreBladeImpl.connect(device, timeout, onConnectStateChange, onError);
+}
+
+Future<int> cancelConnect(String macAddress) async {
+  return JKeyStoreBladeImpl.cancelConnect(macAddress);
+}
+
+Future<int> disconnectDevice(int deviceID) async {
+  return JKeyStoreBladeImpl.disconnectDevice(deviceID);
+}
+
+Future<bool> isConnected(int deviceID) async {
+  return JKeyStoreBladeImpl.isConnected(deviceID);
+}
+
+Future<DeviceInfo> getDeviceInfo(int deviceID) async {
+  return JKeyStoreBladeImpl.getDeviceInfo(deviceID);
+}
+
