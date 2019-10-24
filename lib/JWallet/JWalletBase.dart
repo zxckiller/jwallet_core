@@ -9,8 +9,10 @@ import '../jwallet_core.dart';
 import 'dart:convert';
 
 import 'package:jubiter_plugin/jubiter_plugin.dart';
+import './Model/coin_rates.dart' as $cRates;
 
 enum WalletType {BTC, ETH}
+enum FiatType{CNY,USD,JYP}
 
 abstract class JWalletBase extends JsonableObject with JHttpJubiter{
   //傻逼dart没有protected属性，不定义成public，你让我子类怎么用？？？
@@ -73,5 +75,27 @@ abstract class JWalletBase extends JsonableObject with JHttpJubiter{
   Future<int> showVirtualPWD() async {
     return JuBiterPlugin.showVirtualPWD(contextID);
   }
+
+  //此接口可以返回rate列表，但当前应该用不到，先返回单一的个
+  Future<$cRates.Rates> queryExchangeRates(String symbol,FiatType fType) async{
+    String url = "https://public.jubiterwallet.com.cn/api/queryRatesBySymbols";
+    Map<String,String> params = new Map<String,String>();
+    params["symbol"] = symbol;
+    var response = await httpPost(url,params);
+    var coinRates = $cRates.CoinRates.fromJson(response);
+    $cRates.Rates needRate;
+    coinRates.data.forEach((coin){
+      if(coin.base == symbol){
+        coin.rates.forEach((rate){
+          if(rate.foriegn == fType.toString().split('.').last)
+            needRate = rate;
+        });
+      }
+    });
+    if(needRate != null){
+      return Future<$cRates.Rates>.value(needRate);
+    }else throw JUBR_SERVER_ERROR;
+  }
+
   
 }
