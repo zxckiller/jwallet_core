@@ -133,6 +133,11 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     return Future<String>.value(_address);
   }
 
+  //底层的ETHBuildERC20Abi接口需要修改，增加外部设置token数据的功能
+  Future<ResultString> buildERC20Abi($erc20.Data info,String address, String amountInWei) async {
+    return JuBiterPlugin.ETHBuildERC20Abi(contextID, address, amountInWei);
+  }
+
   Future<ResultString> signTX(String password,TransactionETH txInfo) async{
     if(! await keyStore.verifyPin(contextID,password)) throw JUBR_WRONG_PASSWORD;
     return await JuBiterEthereum.signTransaction(contextID, txInfo);
