@@ -43,6 +43,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
    //Json构造函数
   JWalletETH.fromJson(Map<String, dynamic> json):
   super.fromJson(json){
+      _address = json["address"];
     //构造子类特有数据
       (json["addedERC20Tokens"] as List<dynamic>).forEach(
         (f) => _addedERC20Tokens.add($erc20.Data.fromJson(f))
@@ -59,18 +60,24 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     //增加子类的json化数据，地址、历史等等
     json["addedERC20Tokens"] = _addedERC20Tokens;
     json["txList"] = _txList;
+    json["address"] = _address;
     return json;
   }
   
   String getMainPath(){
     return mainPath;
   }
-  //getter setter不能是async，这里又需要更新数据库，所以单独定义 
-  setMainPath(String _mainPath) async{
-    mainPath = _mainPath;
-    await updateSelf();
-  }
 
+  @override
+  Future<bool> init({String mainPath, String uuid,int deviceID}) async{
+    await super.init();
+    if(mainPath != null) this.mainPath = mainPath;
+    //去取地址
+    bool rv = await active(uuid:uuid,deviceID:deviceID);
+    //把取到的地址，存起来
+    if(rv) await updateSelf();
+    return Future<bool>.value(rv);
+  }
 
   Future<bool> active({String uuid,int deviceID}) async{
     switch (keyStore.type()) {
@@ -84,17 +91,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
         config.mainPath = mainPath;
         ResultInt contextResult = await JuBiterEthereum.createContext(config,deviceID);
         if(contextResult.stateCode == JUBR_OK){
-          //dart catch不住await里面的异常，怎么才能实现同步的在_getAddressFromKeystore出错的时候，返回false？现在只能把这些代码写成一坨放在这
           contextID = contextResult.value;
-          Bip32Path path = Bip32Path.create();
-          path.change = false;
-          path.addressIndex = $fixnum.Int64(0);
-          ResultString address = await JuBiterEthereum.getAddress(contextID, path, false);
-          if(address.stateCode == JUBR_OK){
-            _address = address.value;
-            //_address ="0xc874c758c0bf07f003cff4ddf1d964560138ba79";//for_test
-          }else return Future<bool>.value(false);
-          return Future<bool>.value(true);
         }else{
           return Future<bool>.value(false);
         }
@@ -107,18 +104,8 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
         config.chainID = chainID;
         config.mainPath = mainPath;
         ResultInt contextResult = await JuBiterEthereum.createContext_Software(config,xprv);
-
         if(contextResult.stateCode == JUBR_OK){
           contextID = contextResult.value;
-          Bip32Path path = Bip32Path.create();
-          path.change = false;
-          path.addressIndex = $fixnum.Int64(0);
-          ResultString address = await JuBiterEthereum.getAddress(contextID, path, false);
-          if(address.stateCode == JUBR_OK){
-            //_address = address.value;
-            _address ="0xc874c758c0bf07f003cff4ddf1d964560138ba79";//for_test
-          }else return Future<bool>.value(false);
-          return Future<bool>.value(true);
         }else{
           return Future<bool>.value(false);
         }
@@ -128,6 +115,15 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
       default:
         return Future<bool>.value(false);
     }
+
+    String address = await _getAddressFromKeystore();
+    if(_address == ""){ //第一次创建
+      _address = address;
+    }else{
+      if(_address != address)//DB里面有了address，不知道出了什么错误（可能硬件重新初始化了，uuid没变，但是address变了），本次读出来与保存的不同
+        throw JUBR_ERROR;
+    }
+    return Future<bool>.value(true);
   }
 
   Future<String> _getAddressFromKeystore()async{
@@ -136,8 +132,8 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     path.addressIndex = $fixnum.Int64(0);
     ResultString address = await JuBiterEthereum.getAddress(contextID, path, false);
     if(address.stateCode == JUBR_OK){
-      //_address = address.value;
-      _address ="0xc874c758c0bf07f003cff4ddf1d964560138ba79";//for_test
+      _address = address.value;
+      //_address ="0xc874c758c0bf07f003cff4ddf1d964560138ba79";//for_test
       return Future<String>.value(_address);
     }else throw address.stateCode;
   }

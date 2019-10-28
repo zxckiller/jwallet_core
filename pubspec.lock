@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.36.4"
+  analyzer_plugin:
+    dependency: transitive
+    description:
+      name: analyzer_plugin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.1"
   args:
     dependency: transitive
     description:
@@ -84,7 +91,14 @@ packages:
       name: built_value
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.7.1"
+    version: "6.8.0"
+  built_value_generator:
+    dependency: transitive
+    description:
+      name: built_value_generator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.8.0"
   charcode:
     dependency: transitive
     description:
@@ -247,7 +261,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: e6496fd64b44ceec1847d08218c295270fbdfffd
+      resolved-ref: "28a39a5f1379325f83cf773492cb916e24242408"
       url: "https://github.com/CubeFeng/JuBiter-Plugin.git"
     source: git
     version: "0.0.1"
@@ -383,14 +397,14 @@ packages:
       name: sensors
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.1"
+    version: "0.4.1+1"
   shared_preferences:
     dependency: "direct main"
     description:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.4"
+    version: "0.5.4+1"
   shelf:
     dependency: transitive
     description:
