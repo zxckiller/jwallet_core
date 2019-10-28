@@ -7,6 +7,10 @@ class JProductBlade extends JProductBase{
     pType = ProductType.JubiterBlade;
     _uuid = uuid;
   }
+  
+  String get uuid{
+    return _uuid;
+  }
 
 
   //Json构造函数
