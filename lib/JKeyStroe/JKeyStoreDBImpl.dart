@@ -46,7 +46,7 @@ class JKeyStoreDBImpl implements JInterfaceKeyStore{
   {
     'kType': _type.index,
   };
-  updateSelf(){}
+  Future<bool> updateSelf(){return Future<bool>.value(true);}
 
 
   KeyStoreType type(){return _type;}

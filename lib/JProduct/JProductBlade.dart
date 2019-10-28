@@ -28,7 +28,7 @@ class JProductBlade extends JProductBase{
   Future<String> newWallet(String endPoint, WalletType wType) async{
     String key = await getJWalletManager().newWalletFromParm(endPoint, wType, KeyStoreType.Blade,uuid:_uuid);
     wallets.add(key);
-    updateSelf();
+    await updateSelf();
     return Future<String>.value(key);
   }
 }

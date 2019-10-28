@@ -31,7 +31,7 @@ class JKeyStoreBladeImpl implements JInterfaceKeyStore{
     'kType': _type.index,
   };
 
-  updateSelf(){}
+  Future<bool> updateSelf(){return Future<bool>.value(true);}
 
   //通用函数
   KeyStoreType type(){return _type;}

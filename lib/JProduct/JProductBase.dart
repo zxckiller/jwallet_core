@@ -36,8 +36,9 @@ abstract class JProductBase extends JsonableObject{
     'pType':pType.index
   };
 
-  void updateSelf(){
-    getJProductManager().updateOne(name, this.toJson());
+  Future<bool> updateSelf() async{
+    await getJProductManager().updateOne(name, this.toJson());
+    return Future<bool>.value(true);
   }
 
   //Wallet操作函数

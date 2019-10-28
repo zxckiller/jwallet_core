@@ -19,6 +19,7 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import './Model/account_info.dart';
 import './Model/e_r_c20_token_info.dart' as $erc20;
 import './Model/e_t_h_history.dart' as $history;
+import './Model/miner_fee.dart' as $minerfee;
 
 class JWalletETH extends JWalletBase with JInterfaceETH{
    static final CURVES curve = CURVES.secp256k1;
@@ -30,8 +31,9 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
    final String accountInfoUrl = "/api/v2/queryAccountInfoByAddr";
    final String erc20Info = "/api/v2/queryTokensByNameOrAddr";
    final String historyUrl = "/api/v2/queryTransactionsByAddrs/breif";
+   final String minerFeeUrl = "/api/getMinerFeeEstimations";
 
-   String _address;
+   String _address = "";
 
   JWalletETH(String endPoint,JInterfaceKeyStore keyStoreimpl):super(endPoint,keyStoreimpl){
     wType = WalletType.ETH;
@@ -59,6 +61,17 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     json["txList"] = _txList;
     return json;
   }
+  
+  String getMainPath(){
+    return mainPath;
+  }
+  //getter setter不能是async，这里又需要更新数据库，所以单独定义 
+  setMainPath(String _mainPath) async{
+    mainPath = _mainPath;
+    await updateSelf();
+  }
+
+
   Future<bool> active({String uuid,int deviceID}) async{
     switch (keyStore.type()) {
       
@@ -78,8 +91,8 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
           path.addressIndex = $fixnum.Int64(0);
           ResultString address = await JuBiterEthereum.getAddress(contextID, path, false);
           if(address.stateCode == JUBR_OK){
-            //_address = address.value;
-            _address ="0xc874c758c0bf07f003cff4ddf1d964560138ba79";//for_test
+            _address = address.value;
+            //_address ="0xc874c758c0bf07f003cff4ddf1d964560138ba79";//for_test
           }else return Future<bool>.value(false);
           return Future<bool>.value(true);
         }else{
@@ -195,18 +208,18 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     return _addedERC20Tokens;
   }
   //添加ERC20代币
-  void addERC20Token($erc20.Data token){
+  void addERC20Token($erc20.Data token) async{
     //简单的查重，可以改成重载==，待优化
     _addedERC20Tokens.forEach((f){
       if(f.tokenAddr == token.tokenAddr) throw JUBR_ALREADY_EXITS;
     });
     _addedERC20Tokens.add(token);
-    updateSelf();
+    await updateSelf();
   }
   //删除已添加的ERC20代币
-  void delERC20Token($erc20.Data token){
+  void delERC20Token($erc20.Data token)async{
     _addedERC20Tokens.remove(token);
-    updateSelf();
+    await updateSelf();
   }
 
   //查询本地交易历史，暂时只支持ETH，回头统一改
@@ -245,4 +258,11 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     return Future<List<$history.TxList>>.value(allHistory);
   }
 
+  Future<$minerfee.Data> getMinerFee() async{
+    String url = endPoint + minerFeeUrl;
+    Map<String,String> params = new Map<String,String>();
+    var response = await httpPost(url,params);
+    $minerfee.MinerFee  fee = $minerfee.MinerFee.fromJson(response);
+    return Future<$minerfee.Data>.value(fee.data);
+  }
 }
