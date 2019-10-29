@@ -22,8 +22,10 @@ Map<String, dynamic> _$MinerFeeToJson(MinerFee instance) => <String, dynamic>{
     };
 
 Data _$DataFromJson(Map<String, dynamic> json) {
-  return Data(json['fastestFee'] as int, json['halfHourFee'] as int,
-      json['hourFee'] as int);
+  return Data(
+      (json['fastestFee'] as num)?.toDouble(),
+      (json['halfHourFee'] as num)?.toDouble(),
+      (json['hourFee'] as num)?.toDouble());
 }
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{

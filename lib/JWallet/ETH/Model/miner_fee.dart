@@ -28,13 +28,13 @@ part 'miner_fee.g.dart';
   class Data extends Object {
 
   @JsonKey(name: 'fastestFee')
-  int fastestFee;
+  double fastestFee;
 
   @JsonKey(name: 'halfHourFee')
-  int halfHourFee;
+  double halfHourFee;
 
   @JsonKey(name: 'hourFee')
-  int hourFee;
+  double hourFee;
 
   Data(this.fastestFee,this.halfHourFee,this.hourFee,);
 
