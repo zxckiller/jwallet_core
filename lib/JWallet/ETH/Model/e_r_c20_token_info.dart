@@ -48,7 +48,10 @@ part 'e_r_c20_token_info.g.dart';
   @JsonKey(name: 'token_weight')
   int tokenWeight;
 
-  Data(this.tokenType,this.tokenEname,this.tokenAddr,this.tokenSymbol,this.tokenIconUrl,this.coinType,this.tokenWeight,);
+  @JsonKey(name: 'token_decimal')
+  int tokenDecimal;
+
+  Data(this.tokenType,this.tokenEname,this.tokenAddr,this.tokenSymbol,this.tokenIconUrl,this.coinType,this.tokenWeight,this.tokenDecimal,);
 
   factory Data.fromJson(Map<String, dynamic> srcJson) => _$DataFromJson(srcJson);
 
