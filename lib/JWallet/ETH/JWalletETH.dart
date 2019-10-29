@@ -25,6 +25,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
    static final CURVES curve = CURVES.secp256k1;
    static final String defaultPath = "m/44'/60'/0'";
    static final int chainID = 0;
+   static final int decimal = 18;
 
    List<$erc20.Data> _addedERC20Tokens = new List<$erc20.Data>();
    List<$history.TxList> _txList = new List<$history.TxList>();
@@ -77,6 +78,14 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     //把取到的地址，存起来
     if(rv) await updateSelf();
     return Future<bool>.value(rv);
+  }
+
+  Future<String> wei2ETH(String wei,int decimal){
+    return  BigDecimal.bigNumberDivide(wei,decimal);
+  }
+
+  Future<String> eth2Wei(String eth,int decimal){
+    return BigDecimal.bigNumberMultiply(eth, decimal);
   }
 
   Future<bool> active({String uuid,int deviceID}) async{

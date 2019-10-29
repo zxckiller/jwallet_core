@@ -42,7 +42,7 @@ packages:
       name: build
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   build_config:
     dependency: transitive
     description:
@@ -91,14 +91,14 @@ packages:
       name: built_value
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.8.0"
+    version: "6.8.1"
   built_value_generator:
     dependency: transitive
     description:
       name: built_value_generator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.8.0"
+    version: "6.8.1"
   charcode:
     dependency: transitive
     description:
@@ -161,7 +161,7 @@ packages:
       name: fixnum
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.10.9"
+    version: "0.10.11"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -261,7 +261,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "28a39a5f1379325f83cf773492cb916e24242408"
+      resolved-ref: "0d00fb786eefc895e7cee6c4d0b02d65090c852c"
       url: "https://github.com/CubeFeng/JuBiter-Plugin.git"
     source: git
     version: "0.0.1"
@@ -404,7 +404,7 @@ packages:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.4+1"
+    version: "0.5.4+3"
   shelf:
     dependency: transitive
     description:
