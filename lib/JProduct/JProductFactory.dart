@@ -10,8 +10,8 @@ class JProductFactory{
     return new JProductHD(mnmonic,passpahse,password,name);
   }
 
-  static JProductBlade newProductBlade(String uuid,String name){
-    return new JProductBlade(uuid,name);
+  static JProductBlade newProductBlade(String deviceMAC,String name){
+    return new JProductBlade(deviceMAC,name);
   }
 
   static JProductImport newProductImport(String name){

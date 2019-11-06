@@ -70,11 +70,11 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
   }
 
   @override
-  Future<bool> init({String mainPath, String uuid,int deviceID}) async{
+  Future<bool> init({String mainPath, String deviceMAC,int deviceID}) async{
     await super.init();
     if(mainPath != null) this.mainPath = mainPath;
     //去取地址
-    bool rv = await active(uuid:uuid,deviceID:deviceID);
+    bool rv = await active(deviceMAC:deviceMAC,deviceID:deviceID);
     //把取到的地址，存起来
     if(rv) await updateSelf();
     return Future<bool>.value(rv);
@@ -88,13 +88,13 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     return BigDecimal.bigNumberMultiply(eth, decimal);
   }
 
-  Future<bool> active({String uuid,int deviceID}) async{
+  Future<bool> active({String deviceMAC,int deviceID}) async{
     switch (keyStore.type()) {
       
       case KeyStoreType.Blade:
       {
-        if(uuid == null || deviceID == null) return Future<bool>.value(false);
-        if(uuid != keyStore.getUUID()) return Future<bool>.value(false);
+        if(deviceMAC == null || deviceID == null) return Future<bool>.value(false);
+        if(deviceMAC != keyStore.getDeviceMAC()) return Future<bool>.value(false);
         ContextCfgETH config = ContextCfgETH.create();
         config.chainID = chainID;
         config.mainPath = mainPath;
@@ -129,7 +129,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     if(_address == ""){ //第一次创建
       _address = address;
     }else{
-      if(_address != address)//DB里面有了address，不知道出了什么错误（可能硬件重新初始化了，uuid没变，但是address变了），本次读出来与保存的不同
+      if(_address != address)//DB里面有了address，不知道出了什么错误（可能硬件重新初始化了，deviceMAC没变，但是address变了），本次读出来与保存的不同
         throw JUBR_ERROR;
     }
     return Future<bool>.value(true);
@@ -141,9 +141,8 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     path.addressIndex = $fixnum.Int64(0);
     ResultString address = await JuBiterEthereum.getAddress(contextID, path, false);
     if(address.stateCode == JUBR_OK){
-      _address = address.value;
       //_address ="0xc874c758c0bf07f003cff4ddf1d964560138ba79";//for_test
-      return Future<String>.value(_address);
+      return Future<String>.value(address.value);
     }else throw address.stateCode;
   }
 

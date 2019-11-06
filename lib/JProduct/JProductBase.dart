@@ -1,55 +1,43 @@
-import '../JsonableObject.dart';
 import '../jwallet_core.dart';
 import '../JWallet/JWalletBase.dart';
+import '../JWalletContainer.dart';
 
 enum ProductType {HD, JubiterBlade,Import}
-abstract class JProductBase extends JsonableObject{
-  String name;
-  ProductType pType;
-  List<String> wallets = new List<String>();
+abstract class JProductBase extends JWalletContainer{
 
-  JProductBase(String _name){
-    name = _name;
-  }
+  ProductType pType;
+  JProductBase(String _name):super(_name);
 
   //Json构造函数
-  JProductBase.fromJson(Map<String, dynamic> _json):
-    pType = ProductType.values[_json["pType"]],
-    name = _json["name"]
-    {
-      (_json["wallets"] as List<dynamic>).forEach(
-        (f) => wallets.add(f as String)
-      );
-    }
-    
+  JProductBase.fromJson(Map<String, dynamic> _json):super.fromJson(_json){
+    pType = ProductType.values[_json["pType"]];
+  }
 
-  Map<String, dynamic> toJson() =>
+  @override
+  Map<String, dynamic> toJson(){
+    Map<String, dynamic> json = super.toJson();
+    //增加子类的json化数据，地址、历史等等
+    json["pType"] =  pType.index;
+    return json;
+  }
+
+  @override
+  Map<String, dynamic> toJsonKey() 
   {
-    'name': name,
-    'pType': pType.index,
-    'wallets': wallets
-  };
-
-  Map<String, dynamic> toJsonKey() =>
-  {
-    'name': name,
-    'pType':pType.index
-  };
-
+    Map<String, dynamic> json = super.toJsonKey();
+    //增加子类的json化数据，地址、历史等等
+    json["pType"] =  pType.index;
+    return json;
+  }
+  
+  @override
   Future<bool> updateSelf() async{
     await getJProductManager().updateOne(name, this.toJson());
     return Future<bool>.value(true);
   }
-
-  //Wallet操作函数
+  
+  //创建钱包，base不实现，交给子类
   Future<String> newWallet(String endPoint, WalletType wType);
-
-  Future<T> getWallet<T>(String key){
-    if (!wallets.contains(key)) throw JUBR_NO_ITEM;
-    return getJWalletManager().getWallet<T>(key);
-  }
-
-  List<String> enumWallets(){return wallets;}
 
   Future<List<WalletType>> supportedWalletTypes() async{
     List<WalletType> list = [WalletType.BTC,WalletType.ETH];

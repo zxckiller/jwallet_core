@@ -7,23 +7,23 @@ import 'package:jubiter_plugin/gen/google/protobuf/any.pb.dart';
 
 class JKeyStoreBladeImpl implements JInterfaceKeyStore{
   KeyStoreType _type;
-  String _uuid;
+  String _deviceMAC;
 
   //默认构造函数
-  JKeyStoreBladeImpl(String uuid){
+  JKeyStoreBladeImpl(String deviceMAC){
       _type = KeyStoreType.Blade;
-      _uuid = uuid;
+      _deviceMAC = deviceMAC;
   }
 
   //Json构造函数
   JKeyStoreBladeImpl.fromJson(Map<String, dynamic> json):
   _type = KeyStoreType.values[json["kType"]],
-  _uuid = json["uuid"];
+  _deviceMAC = json["deviceMAC"];
 
   Map<String, dynamic> toJson() =>
   {
     'kType': _type.index,
-    'uuid': _uuid
+    'deviceMAC': _deviceMAC
   };
 
   Map<String, dynamic> toJsonKey() =>
@@ -35,7 +35,7 @@ class JKeyStoreBladeImpl implements JInterfaceKeyStore{
 
   //通用函数
   KeyStoreType type(){return _type;}
-  String getUUID(){return _uuid;}
+  String getDeviceMAC(){return _deviceMAC;}
   Future<bool> init() async{return Future<bool>.value(true);}
   String getXprv(){throw JUBR_IMPL_NOT_SUPPORT;}
   Future<bool> verifyPin(int contextID,String password) async{

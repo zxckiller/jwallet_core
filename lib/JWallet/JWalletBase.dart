@@ -71,7 +71,7 @@ abstract class JWalletBase extends JsonableObject with JHttpJubiter{
     return keyStore.init();
   }
   
-  Future<bool> active({String uuid,int deviceID});
+  Future<bool> active({String deviceMAC,int deviceID});
 
   Future<int> showVirtualPWD() async {
     return JuBiterPlugin.showVirtualPWD(contextID);

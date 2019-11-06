@@ -7,12 +7,12 @@ import 'package:jubiter_plugin/gen/Jub_Common.pbenum.dart';
 import 'package:jubiter_plugin/gen/Jub_Common.pbserver.dart';
 
 class JKeyStoreFactory{
-  static JInterfaceKeyStore fromType(KeyStoreType type,{String mnmonic,String passphase,String password,CURVES cruve,String uuid}){
+  static JInterfaceKeyStore fromType(KeyStoreType type,{String mnmonic,String passphase,String password,CURVES cruve,String deviceMAC}){
     JInterfaceKeyStore keystore;
     switch (type) {
       case KeyStoreType.Blade:
-        if(uuid == null) throw JUBR_ARGUMENTS_BAD;
-        keystore = new JKeyStoreBladeImpl(uuid);
+        if(deviceMAC == null) throw JUBR_ARGUMENTS_BAD;
+        keystore = new JKeyStoreBladeImpl(deviceMAC);
         break;
       case KeyStoreType.LocalDB:
         if(mnmonic == null || password == null) throw JUBR_ARGUMENTS_BAD;

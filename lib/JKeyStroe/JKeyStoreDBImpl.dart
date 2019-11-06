@@ -50,7 +50,8 @@ class JKeyStoreDBImpl implements JInterfaceKeyStore{
 
 
   KeyStoreType type(){return _type;}
-  String getUUID(){throw JUBR_IMPL_NOT_SUPPORT;}
+  String getDeviceMAC(){throw JUBR_IMPL_NOT_SUPPORT;}
+
 
   Future<bool> init() async{
     var seed = await JuBiterWallet.generateSeed(_mnmonic, _passphase);
