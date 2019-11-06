@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:jwallet_core/Error.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -5,6 +6,7 @@ import 'dart:convert';
 mixin JPresistManager{
 
 //增
+  @protected
   Future<String> addOne(String key,Map<String,dynamic> value) async{
     SharedPreferences prefs =  await SharedPreferences.getInstance();
     bool already = prefs.containsKey(key);
@@ -14,6 +16,7 @@ mixin JPresistManager{
     else throw JUBR_HOST_MEMORY;
   }
 //改
+  @protected
   Future<String> updateOne(String key,Map<String,dynamic> value)async{
     SharedPreferences prefs =  await SharedPreferences.getInstance();
     bool success = await prefs.setString(key, json.encode(value));
@@ -22,6 +25,7 @@ mixin JPresistManager{
   }
 
 //查
+  @protected
   Future<Map<String,dynamic>> getOne(String key) async{
     SharedPreferences prefs =  await SharedPreferences.getInstance();
     String value = prefs.getString(key);
@@ -31,11 +35,13 @@ mixin JPresistManager{
   }
 
 //删
+  @protected
   Future<bool> deleteOne(String key) async{
     SharedPreferences prefs =  await SharedPreferences.getInstance();
     return prefs.remove(key);
   }
 
+  @protected
   Future<Set<String>> enumAll() async{
     SharedPreferences prefs =  await SharedPreferences.getInstance();
     return Future<Set<String>>.value(prefs.getKeys()); 

@@ -27,6 +27,7 @@ class JWalletBTC extends JWalletBase with JInterfaceBTC{
     return json;
   }
 
+  @override
   Future<bool> active({String deviceMAC,int deviceID}){return Future<bool>.value(true);}
 
   String getAddress(){return "392V6RoNm9Mu3TvQfuAb458iRTCMokht9U";}

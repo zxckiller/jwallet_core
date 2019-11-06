@@ -1,5 +1,8 @@
+import 'package:flutter/foundation.dart';
+import 'package:jwallet_core/JWallet/ETH/JWalletERC20.dart';
 import 'package:tuple/tuple.dart';
 
+import '../../jwallet_core.dart';
 import 'package:jwallet_core/Error.dart';
 import '../JWalletBase.dart';
 import './interface/JInterfaceETH.dart';
@@ -27,7 +30,6 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
    static final int chainID = 0;
    static final int decimal = 18;
 
-   List<$erc20.Data> _addedERC20Tokens = new List<$erc20.Data>();
    List<$history.TxList> _txList = new List<$history.TxList>();
    final String accountInfoUrl = "/api/v2/queryAccountInfoByAddr";
    final String erc20Info = "/api/v2/queryTokensByNameOrAddr";
@@ -45,10 +47,6 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
   super.fromJson(json){
       _address = json["address"];
     //构造子类特有数据
-      (json["addedERC20Tokens"] as List<dynamic>).forEach(
-        (f) => _addedERC20Tokens.add($erc20.Data.fromJson(f))
-      );
-
       (json["txList"] as List<dynamic>).forEach(
         (f) => _txList.add($history.TxList.fromJson(f))
       );
@@ -58,16 +56,11 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
   Map<String, dynamic> toJson(){
     Map<String, dynamic> json = super.toJson();
     //增加子类的json化数据，地址、历史等等
-    json["addedERC20Tokens"] = _addedERC20Tokens;
     json["txList"] = _txList;
     json["address"] = _address;
     return json;
   }
   
-  String getMainPath(){
-    return mainPath;
-  }
-
   @override
   Future<bool> init({String deviceMAC,int deviceID}) async{
     await super.init();
@@ -78,14 +71,8 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     return Future<bool>.value(rv);
   }
 
-  Future<String> wei2ETH(String wei,int decimal){
-    return  BigDecimal.bigNumberDivide(wei,decimal);
-  }
 
-  Future<String> eth2Wei(String eth,int decimal){
-    return BigDecimal.bigNumberMultiply(eth, decimal);
-  }
-
+  @override
   Future<bool> active({String deviceMAC,int deviceID}) async{
     switch (keyStore.type()) {
       
@@ -144,32 +131,19 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     }else throw address.stateCode;
   }
 
-  Future<String> getAddress() async{
-    return Future<String>.value(_address);
+  @override
+  String getAddress() {
+    return _address;
   }
 
-  //底层的ETHBuildERC20Abi接口需要修改，增加外部设置token数据的功能
-  Future<ResultString> buildERC20Abi($erc20.Data info,String address, String amountInWei) async {
-    return JuBiterPlugin.ETHBuildERC20Abi(contextID, address, amountInWei);
+  @protected
+  set address(String address){
+    _address = address;
   }
-
-  Future<ResultString> signTX(String password,TransactionETH txInfo) async{
-    if(! await keyStore.verifyPin(contextID,password)) throw JUBR_WRONG_PASSWORD;
-    return await JuBiterEthereum.signTransaction(contextID, txInfo);
-  }
-  Future<ResultString> getMainHDNode(ENUM_PUB_FORMAT format)async{
-    return await JuBiterEthereum.getMainHDNode(contextID, format);
-  }
-
-  Future<ResultString> getHDNode(ENUM_PUB_FORMAT format) async{
-    Bip32Path path = Bip32Path.create();
-    path.change = false;
-    path.addressIndex = $fixnum.Int64(0);
-    return await JuBiterEthereum.getHDNode(contextID, format, path);
-  } 
 
   //通用的获取AccountInfo的方法
-  Future<AccountInfo> _getAccountInfo(String address,{String erc20address}) async{
+  @protected
+  Future<AccountInfo> getAccountInfoGeneric(String address,{String erc20address}) async{
     String url = endPoint + accountInfoUrl;
     Map<String,String> params = new Map<String,String>();
     params["address"] = _address;
@@ -179,22 +153,39 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     return Future<AccountInfo>.value(accountInfo);
   }
 
-  Future<String> getBalance({$erc20.Data erc20TokenInfo}) async{
-    if(erc20TokenInfo != null){
-      var accountInfo = await _getAccountInfo(_address,erc20address: erc20TokenInfo.tokenAddr);
-      return Future<String>.value(accountInfo.data.balance);
-    }else{
-      var accountInfo = await _getAccountInfo(_address);
-      return Future<String>.value(accountInfo.data.balance);
-    }
+  @override
+  Future<AccountInfo> getAccountInfo() async{
+    return getAccountInfoGeneric(_address);
   }
 
+  @override
+  Future<String> getBalance() async{
+      var accountInfo = await getAccountInfoGeneric(_address);
+      return Future<String>.value(accountInfo.data.balance);
+  }
+
+  @override
   Future<Tuple2<int,int>> getNonce() async{
-    var accountInfo = await _getAccountInfo(_address);
+    var accountInfo = await getAccountInfoGeneric(_address);
     return Future<Tuple2<int,int>>.value(Tuple2<int,int>(int.parse(accountInfo.data.nonce),int.parse(accountInfo.data.localNonce)));
   }
 
+  @override
+  Future<ResultString> getMainHDNode(ENUM_PUB_FORMAT format)async{
+    return await JuBiterEthereum.getMainHDNode(contextID, format);
+  }
+
+  @override
+  Future<ResultString> getHDNode(ENUM_PUB_FORMAT format) async{
+    Bip32Path path = Bip32Path.create();
+    path.change = false;
+    path.addressIndex = $fixnum.Int64(0);
+    return await JuBiterEthereum.getHDNode(contextID, format, path);
+  } 
+
+
   //使用关键字查询所有的ERC20代币
+  @override
   Future<List<$erc20.Data>> getAllERC20Tokens(String keyword,int pageNumber ,int pageSize) async{
     String url = endPoint + erc20Info;
     Map<String,String> params = new Map<String,String>();
@@ -205,33 +196,37 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     $erc20.ERC20TokenInfo tokenInfo = $erc20.ERC20TokenInfo.fromJson(response);
     return Future<List<$erc20.Data>>.value(tokenInfo.data);
   }
-  //枚举此用户已添加的所有ERC20代币
-  List<$erc20.Data> getAddedERC20Token(){
-    return _addedERC20Tokens;
-  }
+
   //添加ERC20代币
-  void addERC20Token($erc20.Data token) async{
-    //简单的查重，可以改成重载==，待优化
-    _addedERC20Tokens.forEach((f){
-      if(f.tokenAddr == token.tokenAddr) throw JUBR_ALREADY_EXITS;
-    });
-    _addedERC20Tokens.add(token);
-    await updateSelf();
+  @override
+  Future<bool> addERC20Token($erc20.Data token) async{
+    //需要查重在这
+    JWalletERC20 erc20Wallet = new JWalletERC20(this, token);
+    String walletName = await getJWalletManager().addWallet(erc20Wallet);
+    return addWallet(walletName);
   }
+
+  //枚举此用户已添加的所有ERC20代币
+  @override
+  List<String> getAddedERC20Token(){
+    return enumWallets();
+  }
+
   //删除已添加的ERC20代币
-  void delERC20Token($erc20.Data token)async{
-    _addedERC20Tokens.remove(token);
-    await updateSelf();
+  @override
+  Future<bool> removeERC20Token(String wallet)async{
+    return removeWallet(wallet);
   }
 
-  //查询本地交易历史，暂时只支持ETH，回头统一改
-
-  List<$history.TxList> getLocalHistory(){
-    return _txList;
+  //获取一个ERC20代币的wallet
+  @override
+  Future<JWalletERC20> getErc20TokenWallet(String wallet) async{
+    return getWallet<JWalletERC20>(wallet);
   }
 
-  //查询网络交易历史
-  Future<List<$history.TxList>> getCloudHistory(int pageSize,{$erc20.Data tokenInfo,$history.TxList lastTX}) async{
+  //通用查询网络交易历史
+  @protected
+  Future<List<$history.TxList>> getCloudHistoryGeneric(int pageSize,{$erc20.Data tokenInfo,$history.TxList lastTX}) async{
     String url = endPoint + historyUrl;
     Map<String,String> params = new Map<String,String>();
     params["address"] = _address;
@@ -259,12 +254,49 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     }
     return Future<List<$history.TxList>>.value(allHistory);
   }
+  @override
+  List<$history.TxList> getLocalHistory(){
+    return _txList;
+  }
 
+  @override
+  Future<List<$history.TxList>> getCloudHistory(int pageSize,{$history.TxList lastTX}) async{
+    return getCloudHistoryGeneric(pageSize,lastTX:lastTX);
+  }
+
+  @override
   Future<$minerfee.Data> getMinerFee() async{
     String url = endPoint + minerFeeUrl;
     Map<String,String> params = new Map<String,String>();
     var response = await httpPost(url,params);
     $minerfee.MinerFee  fee = $minerfee.MinerFee.fromJson(response);
     return Future<$minerfee.Data>.value(fee.data);
+  }
+
+
+  @override
+  Future<ResultString> signTX(String password,String to,String valueInWei,String gasPriceInWei,String input) async{
+    if(! await keyStore.verifyPin(contextID,password)) throw JUBR_WRONG_PASSWORD;
+
+    Bip32Path bip32path = Bip32Path.create();
+    bip32path.change = false;
+    bip32path.addressIndex = $fixnum.Int64(0);
+    TransactionETH txInfo = TransactionETH.create();
+    txInfo.path = bip32path;
+    txInfo.nonce = (await getNonce()).item1;
+    txInfo.gasLimit = 310000;
+    txInfo.gasPriceInWei = gasPriceInWei;
+    txInfo.to = to;
+    txInfo.valueInWei = valueInWei;
+    txInfo.input = input??"";
+    return await JuBiterEthereum.signTransaction(contextID, txInfo);
+  }
+
+    Future<String> wei2ETH(String wei,int decimal){
+    return  BigDecimal.bigNumberDivide(wei,decimal);
+  }
+
+  Future<String> eth2Wei(String eth,int decimal){
+    return BigDecimal.bigNumberMultiply(eth, decimal);
   }
 }

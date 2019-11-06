@@ -11,6 +11,11 @@ class JWalletManager with JPresistManager{
   //创建一个新钱包
   Future<String> newWalletFromParm(String name,String mainPath,String endPoint,WalletType wType,KeyStoreType kType,{String mnmonic,String passphase,String password,String deviceMAC}) async{  
     JWalletBase wallet = JWalletFactory.fromParam(name,mainPath,endPoint, wType, kType,mnmonic:mnmonic,passphase:passphase,password:password,deviceMAC:deviceMAC);
+    return addWallet(wallet); 
+  }
+
+  //添加一个钱包
+  Future<String> addWallet(JWalletBase wallet){
     return addOne(json.encode(wallet.toJsonKey()),wallet.toJson());  
   }
 

@@ -1,3 +1,5 @@
+import 'package:jwallet_core/JWallet/ETH/JWalletERC20.dart';
+
 import './BTC/JWalletBTC.dart';
 import './ETH/JWalletETH.dart';
 import './JWalletBase.dart';
@@ -34,7 +36,11 @@ class JWalletFactory{
         wallet = new JWalletBTC.fromJson(json);
         break;
       case WalletType.ETH:
-        wallet = new JWalletETH.fromJson(json);
+        if(json["erc20Info"] == null){
+          wallet = new JWalletETH.fromJson(json);
+        }else{
+          wallet = new JWalletERC20.fromJson(json);
+        }
         break;
       default:
     }

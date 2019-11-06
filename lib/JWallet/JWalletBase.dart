@@ -79,11 +79,12 @@ abstract class JWalletBase extends JWalletContainer with JHttpJubiter{
 
   String get mainPath {return _mainPath;}
 
+  //第一次创建的时候调用
   Future<bool> init() async{
     return keyStore.init();
   }
   
-  //base不实现，交给子类，不同的子类实现不一样
+  //每次使用keyStore的时候调用，base不实现，交给子类，不同的子类实现不一样
   Future<bool> active({String deviceMAC,int deviceID});
 
   Future<int> showVirtualPWD() async {
