@@ -33,8 +33,8 @@ class JProductHD extends JProductBase{
   }
 
   @override
-  Future<String> newWallet(String endPoint, WalletType wType) async{
-    String key = await getJWalletManager().newWalletFromParm(endPoint, wType, KeyStoreType.LocalDB,mnmonic:_mnmonic,passphase:_passphase, password: _password);
+  Future<String> newWallet(String mainPath,String endPoint, WalletType wType) async{
+    String key = await getJWalletManager().newWalletFromParm(name,mainPath,endPoint, wType, KeyStoreType.LocalDB,mnmonic:_mnmonic,passphase:_passphase, password: _password);
     await addWallet(key);
     return Future<String>.value(key);
   }

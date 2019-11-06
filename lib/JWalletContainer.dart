@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import './jwallet_core.dart';
 import './JsonableObject.dart';
 //JWalletContainer类并不会真正添加删除Manager存储的钱包，只是一个映射,具体是否修改由子类决定。
@@ -21,11 +22,13 @@ abstract class JWalletContainer extends JsonableObject{
   }
 
   @override
+  @mustCallSuper
   Map<String, dynamic> toJson() => {
     "wallets" : _wallets,
     "name":name
   };
   @override
+  @mustCallSuper
   Map<String, dynamic> toJsonKey() =>{
     'name': name
   };

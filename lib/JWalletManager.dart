@@ -9,8 +9,8 @@ import './Error.dart';
 class JWalletManager with JPresistManager{
 
   //创建一个新钱包
-  Future<String> newWalletFromParm(String endPoint,WalletType wType,KeyStoreType kType,{String mnmonic,String passphase,String password,String deviceMAC}) async{  
-    JWalletBase wallet = JWalletFactory.fromParam(endPoint, wType, kType,mnmonic:mnmonic,passphase:passphase,password:password,deviceMAC:deviceMAC);
+  Future<String> newWalletFromParm(String name,String mainPath,String endPoint,WalletType wType,KeyStoreType kType,{String mnmonic,String passphase,String password,String deviceMAC}) async{  
+    JWalletBase wallet = JWalletFactory.fromParam(name,mainPath,endPoint, wType, kType,mnmonic:mnmonic,passphase:passphase,password:password,deviceMAC:deviceMAC);
     return addOne(json.encode(wallet.toJsonKey()),wallet.toJson());  
   }
 

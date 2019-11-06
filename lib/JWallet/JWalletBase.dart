@@ -1,10 +1,11 @@
 //所有钱包的基类实现
+import 'package:flutter/cupertino.dart';
+import 'package:jwallet_core/JWalletContainer.dart';
 import 'package:uuid/uuid.dart';
 
 import '../JHttpJubiter.dart';
 import '../JKeyStroe/interface/JInterfaceKeyStore.dart';
 import '../JKeyStroe/JKeyStoreFactory.dart';
-import '../JsonableObject.dart';
 import '../jwallet_core.dart';
 import 'dart:convert';
 
@@ -14,10 +15,9 @@ import './Model/coin_rates.dart' as $cRates;
 enum WalletType {BTC, ETH}
 enum FiatType{CNY,USD,JYP}
 
-abstract class JWalletBase extends JsonableObject with JHttpJubiter{
+abstract class JWalletBase extends JWalletContainer with JHttpJubiter{
   //傻逼dart没有protected属性，不定义成public，你让我子类怎么用？？？
-  //钱包名
-  String name;
+
   //网络入口                 
   String endPoint;
   //钱包类型，子类设置
@@ -27,53 +27,67 @@ abstract class JWalletBase extends JsonableObject with JHttpJubiter{
   //uuid
   String uuid;
   //main_path
-  String mainPath;
+  String _mainPath;
   //临时的contexID，不需要持久化
   int contextID;
-  JWalletBase(String _endPoint,JInterfaceKeyStore keyStoreimpl){
+
+  //参数构造函数
+  JWalletBase(String name,String mainPath,String _endPoint,JInterfaceKeyStore keyStoreimpl):super(name){
     endPoint = _endPoint;
     keyStore = keyStoreimpl;
     uuid = new Uuid().v4();
+    _mainPath = mainPath;
   }
 
   //Json构造函数
-  JWalletBase.fromJson(Map<String, dynamic> json):
-    wType = WalletType.values[json["wType"]],
-    endPoint = json["endPoint"],
-    uuid = json["uuid"],
-    mainPath = json["mainPath"]
-  {
+  JWalletBase.fromJson(Map<String, dynamic> json):super.fromJson(json){
+    wType = WalletType.values[json["wType"]];
+    endPoint = json["endPoint"];
+    uuid = json["uuid"];
+    _mainPath = json["mainPath"];
     keyStore = JKeyStoreFactory.fromJson(json["keyStore"]);
   }
 
-  Map<String, dynamic> toJson() =>
-  {
-    'wType': wType.index,
-    'keyStore' : keyStore,
-    'endPoint' : endPoint,
-    'uuid' : uuid,
-    'mainPath' : mainPath
-  };
+  @override
+  @mustCallSuper
+  Map<String, dynamic> toJson(){
+    Map<String, dynamic> json = super.toJson();
+    json["wType"] = wType.index;
+    json["keyStore"] = keyStore;
+    json["endPoint"] = endPoint;
+    json["uuid"] = uuid;
+    json["mainPath"] = _mainPath;
+    return  json;
+  }
 
-  Map<String, dynamic> toJsonKey() =>
-  {
-    'wType': wType.index,
-    'keyStore' : keyStore.toJsonKey(),
-    'uuid' : uuid
-  };
+  @override
+  @mustCallSuper
+  Map<String, dynamic> toJsonKey(){
+    Map<String, dynamic> json = super.toJsonKey();
+    json["wType"] = wType.index;
+    json["keyStore"] = keyStore.toJsonKey();
+    json["uuid"] = uuid;
 
+    return json;
+  }
+
+  @override
   Future<bool> updateSelf() async{
     await getJWalletManager().updateOne(json.encode(this.toJsonKey()), this.toJson());
     return Future<bool>.value(true);
   }
 
+  String get mainPath {return _mainPath;}
+
   Future<bool> init() async{
     return keyStore.init();
   }
   
+  //base不实现，交给子类，不同的子类实现不一样
   Future<bool> active({String deviceMAC,int deviceID});
 
   Future<int> showVirtualPWD() async {
+    if(keyStore.type() != KeyStoreType.Blade) throw JUBR_IMPL_NOT_SUPPORT;
     return JuBiterPlugin.showVirtualPWD(contextID);
   }
 
@@ -97,6 +111,4 @@ abstract class JWalletBase extends JsonableObject with JHttpJubiter{
       return Future<$cRates.Rates>.value(needRate);
     }else throw JUBR_SERVER_ERROR;
   }
-
-  
 }

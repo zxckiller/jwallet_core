@@ -28,8 +28,8 @@ class JProductBlade extends JProductBase{
   }
 
   @override
-  Future<String> newWallet(String endPoint, WalletType wType) async{
-    String key = await getJWalletManager().newWalletFromParm(endPoint, wType, KeyStoreType.Blade,deviceMAC:_deviceMAC);
+  Future<String> newWallet(String mainPath,String endPoint, WalletType wType) async{
+    String key = await getJWalletManager().newWalletFromParm(name,mainPath,endPoint, wType, KeyStoreType.Blade,deviceMAC:_deviceMAC);
     await addWallet(key);
     return Future<String>.value(key);
   }

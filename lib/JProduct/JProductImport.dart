@@ -14,12 +14,12 @@ class JProductImport extends JProductBase{
   }
 
   @override
-  Future<String> newWallet(String endPoint, WalletType wType) async{
+  Future<String> newWallet(String mainPath,String endPoint, WalletType wType) async{
     throw JUBR_IMPL_NOT_SUPPORT;
   }
 
-  Future<String> newWalletFromMnmonic(String endPoint, WalletType wType, String mnmoinc, String password)async{
-    String key = await getJWalletManager().newWalletFromParm(endPoint, wType, KeyStoreType.LocalDB,mnmonic:mnmoinc,password: password);
+  Future<String> newWalletFromMnmonic(String name,String mainPath,String endPoint, WalletType wType, String mnmoinc, String password)async{
+    String key = await getJWalletManager().newWalletFromParm(name,mainPath,endPoint, wType, KeyStoreType.LocalDB,mnmonic:mnmoinc,password: password);
     await addWallet(key);
     return Future<String>.value(key);
   }

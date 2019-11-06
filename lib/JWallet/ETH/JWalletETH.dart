@@ -36,9 +36,8 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
 
    String _address = "";
 
-  JWalletETH(String endPoint,JInterfaceKeyStore keyStoreimpl):super(endPoint,keyStoreimpl){
+  JWalletETH(String name,String mainPath,String endPoint,JInterfaceKeyStore keyStoreimpl):super(name,mainPath??defaultPath,endPoint,keyStoreimpl){
     wType = WalletType.ETH;
-    mainPath = defaultPath;
   }
 
    //Json构造函数
@@ -70,9 +69,8 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
   }
 
   @override
-  Future<bool> init({String mainPath, String deviceMAC,int deviceID}) async{
+  Future<bool> init({String deviceMAC,int deviceID}) async{
     await super.init();
-    if(mainPath != null) this.mainPath = mainPath;
     //去取地址
     bool rv = await active(deviceMAC:deviceMAC,deviceID:deviceID);
     //把取到的地址，存起来
