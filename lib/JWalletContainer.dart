@@ -38,10 +38,8 @@ abstract class JWalletContainer extends JsonableObject{
     return null;
   }
 
-  @protected
   List<String> enumWallets(){return _wallets;}
 
-  @protected
   Future<bool> addWallet(String wallet) async{
     if(_wallets.indexOf(wallet) != -1) throw JUBR_ALREADY_EXITS; //查重
     if(await getJWalletManager().containsKey(wallet)){
@@ -51,13 +49,12 @@ abstract class JWalletContainer extends JsonableObject{
     else throw JUBR_NO_ITEM; //数据库里面没有这个钱包，没办法映射
   }
 
-  @protected
+
   Future<bool> removeWallet(String wallet) async{
     _wallets.remove(wallet);
     return updateSelf();
   }
 
-  @protected
   Future<T> getWallet<T>(String key) async{
     if (!_wallets.contains(key)) throw JUBR_NO_ITEM;
     return getJWalletManager().getWallet<T>(key);

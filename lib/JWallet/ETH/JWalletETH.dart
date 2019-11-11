@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:jwallet_core/JWallet/ETH/JWalletERC20.dart';
 import 'package:tuple/tuple.dart';
+import 'dart:convert';
 
 import '../../jwallet_core.dart';
 import 'package:jwallet_core/Error.dart';
@@ -200,7 +201,12 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
   //添加ERC20代币
   @override
   Future<bool> addERC20Token($erc20.Data token) async{
-    //需要查重在这
+    //简单的查重
+    List<String> addeds = enumAddedERC20Tokens();
+    addeds.forEach((added){
+        var _json = json.decode(added);
+        if(_json["erc20Info"]["token_addr"] == token.tokenAddr) throw JUBR_ALREADY_EXITS;
+    });
     JWalletERC20 erc20Wallet = new JWalletERC20(this, token);
     String walletName = await getJWalletManager().addWallet(erc20Wallet);
     return addWallet(walletName);
@@ -208,7 +214,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
 
   //枚举此用户已添加的所有ERC20代币
   @override
-  List<String> getAddedERC20Token(){
+  List<String> enumAddedERC20Tokens(){
     return enumWallets();
   }
 
@@ -273,11 +279,8 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     return Future<$minerfee.Data>.value(fee.data);
   }
 
-
   @override
-  Future<ResultString> signTX(String password,String to,String valueInWei,String gasPriceInWei,String input) async{
-    if(! await keyStore.verifyPin(contextID,password)) throw JUBR_WRONG_PASSWORD;
-
+  Future<TransactionETH> buildTx(String to,String valueInWei,String gasPriceInWei,String input) async{
     Bip32Path bip32path = Bip32Path.create();
     bip32path.change = false;
     bip32path.addressIndex = $fixnum.Int64(0);
@@ -289,10 +292,16 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     txInfo.to = to;
     txInfo.valueInWei = valueInWei;
     txInfo.input = input??"";
-    return await JuBiterEthereum.signTransaction(contextID, txInfo);
+    return Future<TransactionETH>.value(txInfo);
   }
 
-    Future<String> wei2ETH(String wei,int decimal){
+  @override
+  Future<ResultString> signTX(String password,TransactionETH tx) async{
+    if(! await keyStore.verifyPin(contextID,password)) throw JUBR_WRONG_PASSWORD;
+    return await JuBiterEthereum.signTransaction(contextID, tx);
+  }
+
+  Future<String> wei2ETH(String wei,int decimal){
     return  BigDecimal.bigNumberDivide(wei,decimal);
   }
 

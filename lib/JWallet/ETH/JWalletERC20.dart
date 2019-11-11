@@ -71,7 +71,7 @@ class JWalletERC20 extends JWalletETH{
   }
 
   @override
-  List<String> getAddedERC20Token(){
+  List<String> enumAddedERC20Tokens(){
     throw JUBR_IMPL_NOT_SUPPORT;
   }
  
@@ -92,9 +92,7 @@ class JWalletERC20 extends JWalletETH{
 
 
   @override
-  Future<ResultString> signTX(String password,String to,String valueInWei,String gasPriceInWei,String input) async{
-    if(! await keyStore.verifyPin(contextID,password)) throw JUBR_WRONG_PASSWORD;
-
+  Future<TransactionETH> buildTx(String to,String valueInWei,String gasPriceInWei,String input) async{
     var rv = await buildERC20Abi(_erc20Info,to,valueInWei);
     if(rv.stateCode != JUBR_OK) throw rv.stateCode;
 
@@ -106,13 +104,11 @@ class JWalletERC20 extends JWalletETH{
     TransactionETH txInfo = TransactionETH.create();
     txInfo.path = bip32path;
     txInfo.nonce = (await getNonce()).item1;
-    txInfo.gasLimit = 1000000;
-    //txInfo.gasLimit = _erc20Info.; //需要服务器返数据
+    txInfo.gasLimit = int.parse(_erc20Info.tokenGasusedMax);
     txInfo.gasPriceInWei = gasPriceInWei;
     txInfo.to = _erc20Info.tokenAddr;
     txInfo.valueInWei = valueInWei;
     txInfo.input = rv.value;
-    return await JuBiterEthereum.signTransaction(contextID, txInfo);
+    return Future<TransactionETH>.value(txInfo);
   }
-
 }

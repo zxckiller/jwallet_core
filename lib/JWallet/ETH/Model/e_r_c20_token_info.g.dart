@@ -32,7 +32,8 @@ Data _$DataFromJson(Map<String, dynamic> json) {
       json['token_icon_url'] as String,
       json['coin_type'] as String,
       json['token_weight'] as int,
-      json['token_decimal'] as int);
+      json['token_decimal'] as int,
+      json['token_gasused_max'] as String);
 }
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
@@ -43,5 +44,6 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
       'token_icon_url': instance.tokenIconUrl,
       'coin_type': instance.coinType,
       'token_weight': instance.tokenWeight,
-      'token_decimal': instance.tokenDecimal
+      'token_decimal': instance.tokenDecimal,
+      'token_gasused_max': instance.tokenGasusedMax
     };

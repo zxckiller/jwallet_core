@@ -34,8 +34,10 @@ abstract class JInterfaceETH {
   Future<List<$history.TxList>> getCloudHistory(int pageSize,{$history.TxList lastTX});
   //获取交易手续费
   Future<$minerfee.Data> getMinerFee();
-  //交易
-  Future<ResultString> signTX(String password,String to,String valueInWei,String gasPriceInWei,String input);
+  //构建交易
+  Future<TransactionETH> buildTx(String to,String valueInWei,String gasPriceInWei,String input);
+  //签名交易
+  Future<ResultString> signTX(String password,TransactionETH tx);
 
 
   //获取ERC20代币信息
@@ -43,7 +45,7 @@ abstract class JInterfaceETH {
   //添加一个ERC20代币
   Future<bool> addERC20Token($erc20.Data token);
   //获取所有已添加的ERC20代币
-  List<String> getAddedERC20Token();
+  List<String> enumAddedERC20Tokens();
   //删除已添加的ERC20代币
   Future<bool> removeERC20Token(String wallet);
   //获取一个ERC20 wallet

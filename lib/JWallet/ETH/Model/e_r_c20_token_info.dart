@@ -51,7 +51,10 @@ part 'e_r_c20_token_info.g.dart';
   @JsonKey(name: 'token_decimal')
   int tokenDecimal;
 
-  Data(this.tokenType,this.tokenEname,this.tokenAddr,this.tokenSymbol,this.tokenIconUrl,this.coinType,this.tokenWeight,this.tokenDecimal,);
+  @JsonKey(name: 'token_gasused_max')
+  String tokenGasusedMax;
+
+  Data(this.tokenType,this.tokenEname,this.tokenAddr,this.tokenSymbol,this.tokenIconUrl,this.coinType,this.tokenWeight,this.tokenDecimal,this.tokenGasusedMax,);
 
   factory Data.fromJson(Map<String, dynamic> srcJson) => _$DataFromJson(srcJson);
 

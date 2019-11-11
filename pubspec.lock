@@ -91,14 +91,14 @@ packages:
       name: built_value
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.8.1"
+    version: "6.8.2"
   built_value_generator:
     dependency: transitive
     description:
       name: built_value_generator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.8.1"
+    version: "6.8.2"
   charcode:
     dependency: transitive
     description:
@@ -261,7 +261,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "0d00fb786eefc895e7cee6c4d0b02d65090c852c"
+      resolved-ref: "43e517ff967120a62f31b9675a2f7344518c3fff"
       url: "https://github.com/CubeFeng/JuBiter-Plugin.git"
     source: git
     version: "0.0.1"
