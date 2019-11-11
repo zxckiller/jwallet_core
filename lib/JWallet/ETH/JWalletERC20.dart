@@ -70,7 +70,7 @@ class JWalletERC20 extends JWalletETH{
   }
 
   @override
-  Future<bool> addERC20Token($erc20.Data token) async{
+  Future<String> addERC20Token($erc20.Data token) async{
     throw JUBR_IMPL_NOT_SUPPORT;
   }
 

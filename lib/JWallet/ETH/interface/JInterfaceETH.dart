@@ -43,7 +43,7 @@ abstract class JInterfaceETH {
   //获取ERC20代币信息
   Future<List<$erc20.Data>> getAllERC20Tokens(String keyword,int pageNumber ,int pageSize);
   //添加一个ERC20代币
-  Future<bool> addERC20Token($erc20.Data token);
+  Future<String> addERC20Token($erc20.Data token);
   //获取所有已添加的ERC20代币
   List<String> enumAddedERC20Tokens();
   //删除已添加的ERC20代币

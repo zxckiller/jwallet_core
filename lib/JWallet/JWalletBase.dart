@@ -73,7 +73,7 @@ abstract class JWalletBase extends JWalletContainer with JHttpJubiter{
 
   @override
   Future<bool> updateSelf() async{
-    await getJWalletManager().updateOne(json.encode(this.toJsonKey()), this.toJson());
+    await getJWalletManager().updateWallet(this);
     return Future<bool>.value(true);
   }
 

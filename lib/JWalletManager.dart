@@ -19,6 +19,11 @@ class JWalletManager with JPresistManager{
     return addOne(json.encode(wallet.toJsonKey()),wallet.toJson());  
   }
 
+  //更新一个钱包
+  Future<String> updateWallet(JWalletBase wallet){
+    return updateOne(json.encode(wallet.toJsonKey()),wallet.toJson());  
+  }
+
   //获取某一个钱包
   Future<T> getWallet<T>(String key) async{
     var jsonObj = await getOne(key);

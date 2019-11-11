@@ -200,7 +200,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
 
   //添加ERC20代币
   @override
-  Future<bool> addERC20Token($erc20.Data token) async{
+  Future<String> addERC20Token($erc20.Data token) async{
     //简单的查重
     List<String> addeds = enumAddedERC20Tokens();
     addeds.forEach((added){
@@ -208,8 +208,12 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
         if(_json["erc20Info"]["token_addr"] == token.tokenAddr) throw JUBR_ALREADY_EXITS;
     });
     JWalletERC20 erc20Wallet = new JWalletERC20(this, token);
+    //在walletManager中添加钱包
     String walletName = await getJWalletManager().addWallet(erc20Wallet);
-    return addWallet(walletName);
+    //映射这个wallet
+    bool success = await addWallet(walletName);
+    if(!success) throw JUBR_HOST_MEMORY;
+    return Future<String>.value(walletName);
   }
 
   //枚举此用户已添加的所有ERC20代币
