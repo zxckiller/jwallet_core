@@ -33,7 +33,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
 
    List<$history.TxList> _txList = new List<$history.TxList>();
    final String accountInfoUrl = "/api/v2/queryAccountInfoByAddr";
-   final String erc20Info = "/api/v2/queryTokensByNameOrAddr";
+   final String erc20InfoUrl = "/api/v2/queryTokensByNameOrAddr";
    final String historyUrl = "/api/v2/queryTransactionsByAddrs/breif";
    final String minerFeeUrl = "/api/getMinerFeeEstimations";
 
@@ -188,7 +188,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
   //使用关键字查询所有的ERC20代币
   @override
   Future<List<$erc20.Data>> getAllERC20Tokens(String keyword,int pageNumber ,int pageSize) async{
-    String url = endPoint + erc20Info;
+    String url = endPoint + erc20InfoUrl;
     Map<String,String> params = new Map<String,String>();
     params["tokenNameOrAddr"] = keyword;
     params["pageNum"] = pageNumber.toString();

@@ -49,6 +49,10 @@ class JWalletERC20 extends JWalletETH{
     return json;
   }
 
+  $erc20.Data get erc20Info {
+    return _erc20Info;
+  }
+
   @override
   Future<AccountInfo> getAccountInfo() async{
     return getAccountInfoGeneric(getAddress(),erc20address:_erc20Info.tokenAddr);
