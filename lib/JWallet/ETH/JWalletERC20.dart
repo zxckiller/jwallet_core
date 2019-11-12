@@ -59,8 +59,9 @@ class JWalletERC20 extends JWalletETH{
   }
 
   @override
-  Future<String> getBalance() async{
+  Future<String> getCloudBalance() async{
       var accountInfo = await getAccountInfoGeneric(getAddress(),erc20address:_erc20Info.tokenAddr);
+      balance = accountInfo.data.balance;
       return Future<String>.value(accountInfo.data.balance);
   }
 

@@ -38,6 +38,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
    final String minerFeeUrl = "/api/getMinerFeeEstimations";
 
    String _address = "";
+   String balance = "0";
 
   JWalletETH(String name,String mainPath,String endPoint,JInterfaceKeyStore keyStoreimpl):super(name,mainPath??defaultPath,endPoint,keyStoreimpl){
     wType = WalletType.ETH;
@@ -47,6 +48,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
   JWalletETH.fromJson(Map<String, dynamic> json):
   super.fromJson(json){
       _address = json["address"];
+      balance = json["balance"];
     //构造子类特有数据
       (json["txList"] as List<dynamic>).forEach(
         (f) => _txList.add($history.TxList.fromJson(f))
@@ -59,6 +61,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     //增加子类的json化数据，地址、历史等等
     json["txList"] = _txList;
     json["address"] = _address;
+    json["balance"] = balance;
     return json;
   }
   
@@ -160,9 +163,15 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
   }
 
   @override
-  Future<String> getBalance() async{
+  Future<String> getCloudBalance() async{
       var accountInfo = await getAccountInfoGeneric(_address);
-      return Future<String>.value(accountInfo.data.balance);
+      balance = accountInfo.data.balance;
+      return Future<String>.value(balance);
+  }
+
+  @override
+  String getLocalBalance(){
+    return balance;
   }
 
   @override
