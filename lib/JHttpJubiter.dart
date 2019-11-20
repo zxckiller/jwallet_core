@@ -23,4 +23,26 @@ mixin JHttpJubiter{
     if(resBody["statusCode"] != 0) throw resBody["statusCode"];
     return Future<Map<String,dynamic>>.value(resBody);
   }
+
+  Future<Map<String,dynamic>> httpGet(String url,Map<String,String> parmas) async{
+    url += "?";
+    parmas.forEach((k,v){
+        if(v != null){
+          url += k;
+          url += "=";
+          url += v;
+          url += "&";
+        }
+    });
+    if(parmas.length != 0) url = url.substring(0,url.length-1);
+    
+    var header = Map<String,String>();
+    header['Content-Type'] = "application/x-www-form-urlencoded";
+    var response = await http.get(url,headers:header);
+    var resBody = json.decode(response.body);
+    if(response.statusCode < 200 || response.statusCode >= 300) throw response.statusCode;
+    if(resBody["status"] != 'ok') throw resBody;
+    return Future<Map<String,dynamic>>.value(resBody);
+  }
+  
 }
