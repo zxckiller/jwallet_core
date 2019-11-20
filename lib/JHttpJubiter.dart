@@ -41,7 +41,6 @@ mixin JHttpJubiter{
     var response = await http.get(url,headers:header);
     var resBody = json.decode(response.body);
     if(response.statusCode < 200 || response.statusCode >= 300) throw response.statusCode;
-    if(resBody["status"] != 'ok') throw resBody;
     return Future<Map<String,dynamic>>.value(resBody);
   }
   
