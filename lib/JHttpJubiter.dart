@@ -24,7 +24,7 @@ mixin JHttpJubiter{
     return Future<Map<String,dynamic>>.value(resBody);
   }
 
-  Future<Map<String,dynamic>> httpGet(String url,Map<String,String> parmas) async{
+  Future<Map<String,dynamic>> httpGet(String url,[Map<String,String> parmas]) async{
     if(parmas != null && parmas.length != 0){
       url += "?";
       parmas.forEach((k,v){
@@ -37,7 +37,7 @@ mixin JHttpJubiter{
       });
       url = url.substring(0,url.length-1);
     } 
-    
+
     var header = Map<String,String>();
     header['Content-Type'] = "application/x-www-form-urlencoded";
     var response = await http.get(url,headers:header);
