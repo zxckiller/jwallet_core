@@ -25,16 +25,18 @@ mixin JHttpJubiter{
   }
 
   Future<Map<String,dynamic>> httpGet(String url,Map<String,String> parmas) async{
-    url += "?";
-    parmas.forEach((k,v){
-        if(v != null){
-          url += k;
-          url += "=";
-          url += v;
-          url += "&";
-        }
-    });
-    if(parmas.length != 0) url = url.substring(0,url.length-1);
+    if(parmas != null && parmas.length != 0){
+      url += "?";
+      parmas.forEach((k,v){
+          if(v != null){
+            url += k;
+            url += "=";
+            url += v;
+            url += "&";
+          }
+      });
+      url = url.substring(0,url.length-1);
+    } 
     
     var header = Map<String,String>();
     header['Content-Type'] = "application/x-www-form-urlencoded";
