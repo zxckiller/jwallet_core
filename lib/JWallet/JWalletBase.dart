@@ -30,6 +30,7 @@ abstract class JWalletBase extends JWalletContainer with JHttpJubiter{
   String _mainPath;
   //临时的contexID，不需要持久化
   int contextID;
+  String balance = "0";
 
   //参数构造函数
   JWalletBase(String name,String mainPath,String _endPoint,JInterfaceKeyStore keyStoreimpl):super(name){
