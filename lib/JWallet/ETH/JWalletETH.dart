@@ -38,7 +38,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
    final String minerFeeUrl = "/api/getMinerFeeEstimations";
 
    String _address = "";
-   String balance = "0";
+
 
   JWalletETH(String name,String mainPath,String endPoint,JInterfaceKeyStore keyStoreimpl):super(name,mainPath??defaultPath,endPoint,keyStoreimpl){
     wType = WalletType.ETH;
@@ -300,7 +300,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     TransactionETH txInfo = TransactionETH.create();
     txInfo.path = bip32path;
     txInfo.nonce = (await getNonce()).item1;
-    txInfo.gasLimit = 310000;
+    txInfo.gasLimit = 27800;
     txInfo.gasPriceInWei = gasPriceInWei;
     txInfo.to = to;
     txInfo.valueInWei = valueInWei;
