@@ -78,7 +78,7 @@ Future<ResultString> generateMnemonic(ENUM_MNEMONIC_STRENGTH strenth) async{
 }
 
 Future<int>  checkMnemonic(String mnemonic) async{
-  return JKeyStoreDBImpl.checkMnmonic(mnemonic);
+  return JKeyStoreDBImpl.checkMnemonic(mnemonic);
 }
 
 Future<int> initDevice() async{

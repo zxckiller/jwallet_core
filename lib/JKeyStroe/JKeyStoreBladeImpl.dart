@@ -38,6 +38,7 @@ class JKeyStoreBladeImpl implements JInterfaceKeyStore{
   String getDeviceMAC(){return _deviceMAC;}
   Future<bool> init() async{return Future<bool>.value(true);}
   String getXprv(){throw JUBR_IMPL_NOT_SUPPORT;}
+  String getMnemonic(String password){throw JUBR_IMPL_NOT_SUPPORT;}
   Future<bool> verifyPin(int contextID,String password) async{
     var rv = await JuBiterWallet.verifyPIN(contextID, password);
     if(rv.stateCode != JUBR_OK) return Future<bool>.value(false);

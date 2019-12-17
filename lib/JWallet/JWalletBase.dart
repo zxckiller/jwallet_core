@@ -80,6 +80,8 @@ abstract class JWalletBase extends JWalletContainer with JHttpJubiter{
 
   String get mainPath {return _mainPath;}
 
+  String getMnemonic(String password){return keyStore.getMnemonic(password);}
+
   //第一次创建的时候调用
   Future<bool> init() async{
     return keyStore.init();

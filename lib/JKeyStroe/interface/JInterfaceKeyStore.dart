@@ -6,6 +6,7 @@ abstract class JInterfaceKeyStore implements JsonableObject{
   KeyStoreType type();
   Future<bool> init();
   String getXprv();
+  String getMnemonic(String password);
   Future<bool> verifyPin(int contextID,String password);
   String getDeviceMAC();
 }

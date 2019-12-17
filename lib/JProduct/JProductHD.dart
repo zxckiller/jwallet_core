@@ -1,41 +1,36 @@
 import './JProductBase.dart';
 import '../jwallet_core.dart';
+import '../JKeyStroe/JKeyStoreFactory.dart';
+import '../JKeyStroe/JKeyStoreDBImpl.dart';
 
 class JProductHD extends JProductBase{
-  String _mnmonic;
-  String _password;
-  String _passphase;
-  JProductHD(String mnmonic,String passphase,String password,String name):super(name){
+  JKeyStoreDBImpl _keyStore;
+  JProductHD(String mnemonic,String passphase,String password,String name):super(name){
     pType = ProductType.HD;
-    _mnmonic = mnmonic;
-    _password = password;
-    _passphase = passphase;
+    _keyStore = new JKeyStoreDBImpl(mnemonic,passphase,password,CURVES.secp256k1);
   }
 
-  
   //Json构造函数
   JProductHD.fromJson(Map<String, dynamic> json):
   super.fromJson(json){
     //构造子类特有数据
-    _mnmonic = json["mnmonic"];
-    _password = json["password"];
-    _passphase = json["passphase"];
+    _keyStore = JKeyStoreFactory.fromJson(json["keyStore"]);
   }
 
   @override
   Map<String, dynamic> toJson(){
     Map<String, dynamic> json = super.toJson();
     //增加子类的json化数据，地址、历史等等
-    json["mnmonic"] = _mnmonic;
-    json["password"] = _password;
-    json["passphase"] = _passphase;
+    json["keyStore"] = _keyStore.toJson();
     return json;
   }
 
   @override
   Future<String> newWallet(String mainPath,String endPoint, WalletType wType) async{
-    String key = await getJWalletManager().newWalletFromParm(name,mainPath,endPoint, wType, KeyStoreType.LocalDB,mnmonic:_mnmonic,passphase:_passphase, password: _password);
+    String key = await getJWalletManager().newWalletFromKeyStore(name,mainPath,endPoint, wType, _keyStore);
     await addWallet(key);
     return Future<String>.value(key);
   }
+
+  String getMnemonic(String password){return _keyStore.getMnemonic(password);}
 }

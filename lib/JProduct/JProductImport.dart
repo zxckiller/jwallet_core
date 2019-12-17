@@ -16,11 +16,11 @@ class JProductImport extends JProductBase {
     throw JUBR_IMPL_NOT_SUPPORT;
   }
 
-  Future<String> newWalletFromMnmonic(String name, String mainPath, String endPoint,
-      WalletType wType, String mnmoinc, String passphrase, String password) async {
+  Future<String> newWalletFromMnemonic(String name, String mainPath, String endPoint,
+      WalletType wType, String mnemonic, String passphrase, String password) async {
     String key = await getJWalletManager().newWalletFromParm(
         name, mainPath, endPoint, wType, KeyStoreType.LocalDB,
-        mnmonic: mnmoinc, passphase: passphrase, password: password);
+        mnemonic: mnemonic, passphase: passphrase, password: password);
     await addWallet(key);
     return Future<String>.value(key);
   }

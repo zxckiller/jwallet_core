@@ -7,16 +7,16 @@ import 'package:jubiter_plugin/jubiter_plugin.dart';
 
 class JKeyStoreDBImpl implements JInterfaceKeyStore{
   KeyStoreType _type;
-  String _mnmonic;
+  String _mnemonic;
   String _password;
   String _passphase;
   String xprv;
   CURVES _curve;
 
   //默认构造函数
-  JKeyStoreDBImpl(String mnmonic,String passphase,String password,CURVES curve){
+  JKeyStoreDBImpl(String mnemonic,String passphase,String password,CURVES curve){
     _type = KeyStoreType.LocalDB;
-    _mnmonic = mnmonic;
+    _mnemonic = mnemonic;
     _passphase = passphase;
     _password = password;
     _curve = curve;
@@ -25,7 +25,7 @@ class JKeyStoreDBImpl implements JInterfaceKeyStore{
   //Json构造函数
   JKeyStoreDBImpl.fromJson(Map<String, dynamic> json):
   _type = KeyStoreType.values[json["kType"]],
-  _mnmonic = json["mnmonic"],
+  _mnemonic = json["mnemonic"],
   _password = json["password"],
   _passphase = json["passphase"],
   xprv = json["xprv"],
@@ -35,7 +35,7 @@ class JKeyStoreDBImpl implements JInterfaceKeyStore{
   Map<String, dynamic> toJson() =>
   {
     'kType': _type.index,
-    'mnmonic' : _mnmonic,
+    'mnemonic' : _mnemonic,
     'password' : _password,
     'passphase' : _passphase,
     'xprv' : xprv,
@@ -54,7 +54,7 @@ class JKeyStoreDBImpl implements JInterfaceKeyStore{
 
 
   Future<bool> init() async{
-    var seed = await JuBiterWallet.generateSeed(_mnmonic, _passphase);
+    var seed = await JuBiterWallet.generateSeed(_mnemonic, _passphase);
     if(seed.stateCode != JUBR_OK) throw seed.stateCode;
     var _xprv = await JuBiterWallet.seedToMasterPrivateKey(seed.value, _curve);
     if(_xprv.stateCode != JUBR_OK) throw _xprv.stateCode;
@@ -63,6 +63,10 @@ class JKeyStoreDBImpl implements JInterfaceKeyStore{
   }
 
   String getXprv(){return xprv;}
+  String getMnemonic(String password){
+    if(password == _password)return _mnemonic;
+    else throw JUBR_WRONG_PASSWORD;
+  }
 
   //后期xprv应该是被pin加密起来的，验pin通过需要解密xprv
   Future<bool> verifyPin(int contextID,String password){
@@ -74,7 +78,7 @@ class JKeyStoreDBImpl implements JInterfaceKeyStore{
     return Future<ResultString>.value(mnemonicResult);
   }
 
-  static Future<int> checkMnmonic(String mnemonic){
+  static Future<int> checkMnemonic(String mnemonic){
     return JuBiterWallet.checkMnemonic(mnemonic);
   }
 

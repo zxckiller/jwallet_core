@@ -6,8 +6,8 @@ import './JProductImport.dart';
 //几种Product创建的参数不同都不相同，需要分开创建
 class JProductFactory{
 
-  static JProductHD newProducetHD(String mnmonic,String passpahse,String password,String name){
-    return new JProductHD(mnmonic,passpahse,password,name);
+  static JProductHD newProducetHD(String mnemonic,String passpahse,String password,String name){
+    return new JProductHD(mnemonic,passpahse,password,name);
   }
 
   static JProductBlade newProductBlade(String deviceMAC,String name){
