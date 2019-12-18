@@ -31,7 +31,7 @@ class JKeyStoreDBImpl implements JInterfaceKeyStore{
   xprv = json["xprv"],
   _curve = CURVES.valueOf(json["curve"]);
 
-  
+
   Map<String, dynamic> toJson() =>
   {
     'kType': _type.index,
@@ -41,7 +41,7 @@ class JKeyStoreDBImpl implements JInterfaceKeyStore{
     'xprv' : xprv,
     "curve" : _curve.value
   };
-  
+
   Map<String, dynamic> toJsonKey() =>
   {
     'kType': _type.index,
@@ -73,7 +73,12 @@ class JKeyStoreDBImpl implements JInterfaceKeyStore{
     return Future<bool>.value(password == _password);
   }
 
-  static Future<ResultString> generateMnemonic(ENUM_MNEMONIC_STRENGTH strenth) async{
+  Future<bool> modifyPin(int contextID, String oldPassword, String newPassword) {
+    _password = newPassword;
+    return Future<bool>.value(true);
+  }
+
+  static Future<ResultString> generateMnemonic(ENUM_MNEMONIC_STRENGTH strenth) async {
     ResultString mnemonicResult = await JuBiterWallet.generateMnemonic(strenth);
     return Future<ResultString>.value(mnemonicResult);
   }

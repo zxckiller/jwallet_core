@@ -45,6 +45,10 @@ class JKeyStoreBladeImpl implements JInterfaceKeyStore{
     return Future<bool>.value(true);
   }
 
+  Future<bool> modifyPin(int contextID, String oldPassword, String newPassword) {
+    throw JUBR_IMPL_NOT_SUPPORT;
+  }
+
   //蓝牙相关函数
   static Future<int> initDevice() async {
     return JuBiterWallet.initDevice();

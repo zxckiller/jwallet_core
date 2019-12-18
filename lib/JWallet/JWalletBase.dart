@@ -1,5 +1,6 @@
 //所有钱包的基类实现
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:jwallet_core/JWalletContainer.dart';
 import 'package:uuid/uuid.dart';
 
@@ -18,7 +19,7 @@ enum FiatType{CNY,USD,JYP}
 abstract class JWalletBase extends JWalletContainer with JHttpJubiter{
   //傻逼dart没有protected属性，不定义成public，你让我子类怎么用？？？
 
-  //网络入口                 
+  //网络入口
   String endPoint;
   //钱包类型，子类设置
   WalletType wType;
@@ -86,7 +87,7 @@ abstract class JWalletBase extends JWalletContainer with JHttpJubiter{
   Future<bool> init() async{
     return keyStore.init();
   }
-  
+
   //每次使用keyStore的时候调用，base不实现，交给子类，不同的子类实现不一样
   Future<bool> active({String deviceMAC,int deviceID});
 
@@ -114,5 +115,11 @@ abstract class JWalletBase extends JWalletContainer with JHttpJubiter{
     if(needRate != null){
       return Future<$cRates.Rates>.value(needRate);
     }else throw JUBR_SERVER_ERROR;
+  }
+
+  Future<bool> modifyPin(String oldPassword, String newPassword) async {
+    if (!await keyStore.verifyPin(contextID, oldPassword)) throw JUBR_WRONG_PASSWORD;
+    keyStore.modifyPin(contextID, oldPassword, newPassword);
+    return updateSelf();
   }
 }
