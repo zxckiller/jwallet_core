@@ -122,4 +122,9 @@ abstract class JWalletBase extends JWalletContainer with JHttpJubiter{
     keyStore.modifyPin(contextID, oldPassword, newPassword);
     return updateSelf();
   }
+
+  Future<bool> modifyWalletName(String walletName) {
+    name = walletName;
+    return updateSelf();
+  }
 }
