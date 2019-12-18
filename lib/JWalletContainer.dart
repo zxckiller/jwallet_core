@@ -30,7 +30,7 @@ abstract class JWalletContainer extends JsonableObject{
   @override
   @mustCallSuper
   Map<String, dynamic> toJsonKey() =>{
-    'name': name
+//    'name': name
   };
 
   @override

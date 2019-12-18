@@ -18,6 +18,7 @@ mixin JPresistManager{
 //改
   @protected
   Future<String> updateOne(String key,Map<String,dynamic> value)async{
+    print('>>> [updateOne] key: $key, value: ${value.toString()} ');
     SharedPreferences prefs =  await SharedPreferences.getInstance();
     bool success = await prefs.setString(key, json.encode(value));
     if(success) return Future<String>.value(key);
