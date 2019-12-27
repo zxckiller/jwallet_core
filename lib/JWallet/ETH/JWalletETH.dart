@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:jwallet_core/JWallet/ETH/JWalletERC20.dart';
+import 'package:jwallet_core/JWallet/ETH/Model/account_info.dart' as accountInfoData;
 import 'package:tuple/tuple.dart';
 import 'dart:convert';
 
@@ -33,6 +34,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
 
    List<$history.TxList> _txList = new List<$history.TxList>();
    final String accountInfoUrl = "/api/v2/queryAccountInfoByAddr";
+   final String batchAccountInfoUrl = "/api/v2/queryAccountInfoByAddrs";
    final String erc20InfoUrl = "/api/v2/queryTokensByNameOrAddr";
    final String historyUrl = "/api/v2/queryTransactionsByAddrs/breif";
    final String minerFeeUrl = "/api/getMinerFeeEstimations";
@@ -54,17 +56,16 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
         (f) => _txList.add($history.TxList.fromJson(f))
       );
   }
-  
+
   @override
   Map<String, dynamic> toJson(){
     Map<String, dynamic> json = super.toJson();
     //增加子类的json化数据，地址、历史等等
     json["txList"] = _txList;
     json["address"] = _address;
-    json["balance"] = balance;
     return json;
   }
-  
+
   @override
   Future<bool> init({String deviceMAC,int deviceID}) async{
     await super.init();
@@ -75,11 +76,9 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     return Future<bool>.value(rv);
   }
 
-
   @override
   Future<bool> active({String deviceMAC,int deviceID}) async{
     switch (keyStore.type()) {
-      
       case KeyStoreType.Blade:
       {
         if(deviceMAC == null || deviceID == null) return Future<bool>.value(false);
@@ -109,7 +108,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
         }
       }
       break;
-      
+
       default:
         return Future<bool>.value(false);
     }
@@ -157,6 +156,29 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     return Future<AccountInfo>.value(accountInfo);
   }
 
+  // 批量获取账户信息
+  @protected
+  Future<AccountInfo> getBatchAccountInfoGeneric(String address, {List<String> erc20AddressList})
+  async {
+    String url = endPoint + batchAccountInfoUrl;
+    Map<String, String> params = new Map<String, String>();
+    params["address"] = _address;
+
+    String contractAddress = '';
+    erc20AddressList.forEach((element) {
+      contractAddress += ('\"$element\",');
+    });
+    // 去除尾部逗号
+    contractAddress = (contractAddress.substring(0, contractAddress.length - 1));
+    contractAddress = '[$contractAddress]';
+
+    params["contractAddrs"] = contractAddress;
+    var response = await httpPost(url, params);
+    print('[core] response: $response');
+    var accountInfo = AccountInfo.fromJson(response);
+    return Future<AccountInfo>.value(accountInfo);
+  }
+
   @override
   Future<AccountInfo> getAccountInfo() async{
     return getAccountInfoGeneric(_address);
@@ -167,6 +189,18 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
       var accountInfo = await getAccountInfoGeneric(_address);
       balance = accountInfo.data.balance;
       return Future<String>.value(balance);
+  }
+
+  /// 批量获取币种信息
+  Future<accountInfoData.Data> getBatchBalance() async {
+    List<String> coinList = enumWallets();
+    List<String> contractList = [];
+    coinList.forEach((element) {
+      Map<String, dynamic> map = json.decode(element);
+      contractList.add(map['erc20Info']['token_addr']);
+    });
+    var acountInfo = await getBatchAccountInfoGeneric(_address, erc20AddressList: contractList);
+    return Future<accountInfoData.Data>.value(acountInfo.data);
   }
 
   @override
@@ -191,8 +225,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     path.change = false;
     path.addressIndex = $fixnum.Int64(0);
     return await JuBiterEthereum.getHDNode(contextID, format, path);
-  } 
-
+  }
 
   //使用关键字查询所有的ERC20代币
   @override
@@ -273,6 +306,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH{
     }
     return Future<List<$history.TxList>>.value(allHistory);
   }
+
   @override
   List<$history.TxList> getLocalHistory(){
     return _txList;
