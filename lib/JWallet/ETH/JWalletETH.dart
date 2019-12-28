@@ -49,7 +49,6 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
   //Json构造函数
   JWalletETH.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
     _address = json["address"];
-    balance = json["balance"];
     //构造子类特有数据
     (json["txList"] as List<dynamic>).forEach((f) => _txList.add($history.TxList.fromJson(f)));
   }
@@ -188,6 +187,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
   Future<String> getCloudBalance() async {
     var accountInfo = await getAccountInfoGeneric(_address);
     balance = accountInfo.data.balance;
+    await updateSelf();
     return Future<String>.value(balance);
   }
 
@@ -351,11 +351,11 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
     return await JuBiterEthereum.signTransaction(contextID, tx);
   }
 
-  Future<String> wei2ETH(String wei, int decimal) {
-    return BigDecimal.bigNumberDivide(wei, decimal);
-  }
-
-  Future<String> eth2Wei(String eth, int decimal) {
-    return BigDecimal.bigNumberMultiply(eth, decimal);
-  }
+//  Future<String> wei2ETH(String wei, int decimal) {
+//    return BigDecimal.bigNumberDivide(wei, decimal);
+//  }
+//
+//  Future<String> eth2Wei(String eth, int decimal) {
+//    return BigDecimal.bigNumberMultiply(eth, decimal);
+//  }
 }
