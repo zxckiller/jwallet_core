@@ -173,7 +173,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
 
     params["contractAddrs"] = contractAddress;
     var response = await httpPost(url, params);
-    print('[core] response: $response');
+//    print('[core] response: $response');
     var accountInfo = AccountInfo.fromJson(response);
     return Future<AccountInfo>.value(accountInfo);
   }
