@@ -350,12 +350,4 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
     if (!await keyStore.verifyPin(contextID, password)) throw JUBR_WRONG_PASSWORD;
     return await JuBiterEthereum.signTransaction(contextID, tx);
   }
-
-//  Future<String> wei2ETH(String wei, int decimal) {
-//    return BigDecimal.bigNumberDivide(wei, decimal);
-//  }
-//
-//  Future<String> eth2Wei(String eth, int decimal) {
-//    return BigDecimal.bigNumberMultiply(eth, decimal);
-//  }
 }
