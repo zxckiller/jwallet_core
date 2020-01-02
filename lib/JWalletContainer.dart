@@ -51,8 +51,12 @@ abstract class JWalletContainer extends JsonableObject{
 
 
   Future<bool> removeWallet(String wallet) async{
-    _wallets.remove(wallet);
-    return updateSelf();
+    if(await getJWalletManager().containsKey(wallet)){
+      getJWalletManager().removeWallet(wallet);
+      _wallets.remove(wallet);
+      return updateSelf();
+    }
+    else throw JUBR_NO_ITEM; //数据库里面没有这个钱包，没办法映射
   }
 
   Future<T> getWallet<T>(String key) async{
