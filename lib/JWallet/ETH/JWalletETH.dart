@@ -167,13 +167,15 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
     erc20AddressList.forEach((element) {
       contractAddress += ('\"$element\",');
     });
-    // 去除尾部逗号
-    contractAddress = (contractAddress.substring(0, contractAddress.length - 1));
+    if (contractAddress != '') {
+      // 去除尾部逗号
+      contractAddress = (contractAddress.substring(0, contractAddress.length - 1));
+    }
     contractAddress = '[$contractAddress]';
 
     params["contractAddrs"] = contractAddress;
     var response = await httpPost(url, params);
-//    print('[core] response: $response');
+    print('[core] response: $response');
     var accountInfo = AccountInfo.fromJson(response);
     return Future<AccountInfo>.value(accountInfo);
   }
