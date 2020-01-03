@@ -36,11 +36,8 @@ class JProductManager with JPresistManager{
     return Future<T>.value(p as T); 
   }
 
-
-  // Future<JProductBase> getProduct(String key) async{
-  //   var jsonObj = await getOne(key);
-  //   JWalletBase wallet = JWalletFactory.fromJson(jsonObj);
-  //   return Future<JWalletBase>.value(wallet); 
-  // }
+  Future<bool> deleteProduct(String key) {
+    return deleteOne(key);
+  }
 
 }
