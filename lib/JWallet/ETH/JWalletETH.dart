@@ -49,12 +49,14 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
   //Json构造函数
   JWalletETH.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
     _address = json["address"];
+    print('>>> ETH fromJson address: $_address');
     //构造子类特有数据
     (json["txList"] as List<dynamic>).forEach((f) => _txList.add($history.TxList.fromJson(f)));
   }
 
   @override
   Map<String, dynamic> toJson() {
+    print('>>> toJson: address: $_address, uuid：$uuid');
     Map<String, dynamic> json = super.toJson();
     //增加子类的json化数据，地址、历史等等
     json["txList"] = _txList;
@@ -68,7 +70,10 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
     //去取地址
     bool rv = await active(deviceMAC: deviceMAC, deviceID: deviceID);
     //把取到的地址，存起来
-    if (rv) await updateSelf();
+    if (rv) {
+      print('>>> init updateSelf');
+      await updateSelf();
+    }
     return Future<bool>.value(rv);
   }
 
@@ -140,6 +145,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
 
   @protected
   set address(String address) {
+    print('>>> ETH set address: $address');
     _address = address;
   }
 
@@ -148,7 +154,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
   Future<AccountInfo> getAccountInfoGeneric(String address, {String erc20address}) async {
     String url = endPoint + accountInfoUrl;
     Map<String, String> params = new Map<String, String>();
-    params["address"] = _address;
+    params["address"] = address;
     params["contractAddress"] = erc20address;
     var response = await httpPost(url, params);
     var accountInfo = AccountInfo.fromJson(response);
@@ -161,7 +167,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
       {List<String> erc20AddressList}) async {
     String url = endPoint + batchAccountInfoUrl;
     Map<String, String> params = new Map<String, String>();
-    params["address"] = _address;
+    params["address"] = address;
 
     String contractAddress = '';
     erc20AddressList.forEach((element) {
@@ -189,7 +195,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
   Future<String> getCloudBalance() async {
     var accountInfo = await getAccountInfoGeneric(_address);
     balance = accountInfo.data.balance;
-    await updateSelf();
+//    await updateSelf();
     return Future<String>.value(balance);
   }
 
@@ -201,8 +207,9 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
       Map<String, dynamic> map = json.decode(element);
       contractList.add(map['erc20Info']['token_addr']);
     });
-    var acountInfo = await getBatchAccountInfoGeneric(_address, erc20AddressList: contractList);
-    return Future<accountInfoData.Data>.value(acountInfo.data);
+    var accountInfo = await getBatchAccountInfoGeneric(_address, erc20AddressList: contractList);
+    balance = accountInfo.data.balance;
+    return Future<accountInfoData.Data>.value(accountInfo.data);
   }
 
   @override

@@ -54,7 +54,7 @@ abstract class JWalletBase extends JWalletContainer with JHttpJubiter {
     uuid = json["uuid"];
     _mainPath = json["mainPath"];
     keyStore = JKeyStoreFactory.fromJson(json["keyStore"]);
-    balance = json["balance"];
+    _balance = json["balance"];
   }
 
   @override
@@ -66,7 +66,7 @@ abstract class JWalletBase extends JWalletContainer with JHttpJubiter {
     json["endPoint"] = endPoint;
     json["uuid"] = uuid;
     json["mainPath"] = _mainPath;
-    json["balance"] = balance;
+    json["balance"] = _balance;
     return json;
   }
 
