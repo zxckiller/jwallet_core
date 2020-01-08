@@ -19,7 +19,7 @@ import 'package:encrypt/encrypt.dart';
         var data = await deviceInfoPlugin.iosInfo;
         deviceName = data.name;
         deviceVersion = data.systemVersion;
-        identifier = data.identifierForVendor;  //UUID for iOS
+        identifier = data.identifierForVendor.replaceAll('-','');  //UUID for iOS
       }
     } catch (e){
       print('Failed to get platform version');
