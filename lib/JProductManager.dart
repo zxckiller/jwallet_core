@@ -14,6 +14,7 @@ class JProductManager with JPresistManager{
   Future<String> newProductHD(String mnemonic,String passpahse,String password)async{
     String name = productDefault;
     JProductHD p = JProductFactory.newProducetHD(mnemonic, passpahse,password, name);
+    await p.encryptKeyStore();
     return addOne(name, p.toJson());
   }
 

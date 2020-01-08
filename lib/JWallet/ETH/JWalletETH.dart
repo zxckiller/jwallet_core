@@ -97,7 +97,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
         break;
       case KeyStoreType.LocalDB:
         {
-          String xprv = keyStore.getXprv();
+          String xprv = await keyStore.getXprv();
           ContextCfgETH config = ContextCfgETH.create();
           config.chainID = chainID;
           config.mainPath = mainPath;

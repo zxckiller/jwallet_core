@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:jwallet_core/JWalletContainer.dart';
 import 'package:uuid/uuid.dart';
 
-import '../JHttpJubiter.dart';
+import '../Utils/JHttpJubiter.dart';
 import '../JKeyStroe/interface/JInterfaceKeyStore.dart';
 import '../JKeyStroe/JKeyStoreFactory.dart';
 import '../jwallet_core.dart';
@@ -98,7 +98,7 @@ abstract class JWalletBase extends JWalletContainer with JHttpJubiter {
     updateSelf();
   }
 
-  String getMnemonic(String password) {
+  Future<String> getMnemonic(String password) async{
     return keyStore.getMnemonic(password);
   }
 

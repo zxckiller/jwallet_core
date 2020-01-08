@@ -32,5 +32,10 @@ class JProductHD extends JProductBase{
     return Future<String>.value(key);
   }
 
-  String getMnemonic(String password){return _keyStore.getMnemonic(password);}
+  Future<String> getMnemonic(String password) async {return _keyStore.getMnemonic(password);}
+
+  Future<bool> encryptKeyStore() async{
+    return _keyStore.encrypt();
+  }
+
 }
