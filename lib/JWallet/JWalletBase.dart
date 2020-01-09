@@ -147,6 +147,10 @@ abstract class JWalletBase extends JWalletContainer with JHttpJubiter {
     return updateSelf();
   }
 
+  Future<bool> verifyPin(String password) async {
+    return keyStore.verifyPin(contextID, password);
+  }
+
   Future<bool> modifyWalletName(String walletName) {
     name = walletName;
     return updateSelf();
