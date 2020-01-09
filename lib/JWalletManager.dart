@@ -12,7 +12,7 @@ class JWalletManager with JPresistManager{
   Future<String> newWalletFromParm(String name,String mainPath,String endPoint,WalletType wType,
       KeyStoreType kType,{String mnemonic,String passphase = '',String password,String deviceMAC})
   async{
-    JWalletBase wallet = JWalletFactory.fromParam(name,mainPath,endPoint, wType, kType,mnemonic:mnemonic,passphase:passphase,password:password,deviceMAC:deviceMAC);
+    JWalletBase wallet = await JWalletFactory.fromParam(name,mainPath,endPoint, wType, kType,mnemonic:mnemonic,passphase:passphase,password:password,deviceMAC:deviceMAC);
     return addWallet(wallet); 
   }
 

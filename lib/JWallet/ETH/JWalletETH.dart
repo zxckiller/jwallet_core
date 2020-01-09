@@ -44,6 +44,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
   JWalletETH(String name, String mainPath, String endPoint, JInterfaceKeyStore keyStoreimpl)
       : super(name, mainPath ?? defaultPath, endPoint, keyStoreimpl) {
     wType = WalletType.ETH;
+    version = "1.0";
   }
 
   //Json构造函数

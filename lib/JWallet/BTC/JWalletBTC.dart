@@ -11,6 +11,7 @@ class JWalletBTC extends JWalletBase with JInterfaceBTC{
 
   JWalletBTC(String name,String mainPath,String endPoint,JInterfaceKeyStore keyStoreimpl):super(name,mainPath??defaultPath,endPoint,keyStoreimpl){
     wType = WalletType.BTC;
+    version = "1.0";
   }
 
   //Json构造函数

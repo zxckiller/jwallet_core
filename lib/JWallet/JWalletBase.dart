@@ -38,6 +38,9 @@ abstract class JWalletBase extends JWalletContainer with JHttpJubiter {
   int contextID;
   String _balance = "0";
 
+  //Version
+  String version = "";
+
   //参数构造函数
   JWalletBase(String name, String mainPath, String _endPoint, JInterfaceKeyStore keyStoreimpl)
       : super(name) {
@@ -55,6 +58,7 @@ abstract class JWalletBase extends JWalletContainer with JHttpJubiter {
     _mainPath = json["mainPath"];
     keyStore = JKeyStoreFactory.fromJson(json["keyStore"]);
     _balance = json["balance"];
+    version = json["version"];
   }
 
   @override
@@ -67,6 +71,7 @@ abstract class JWalletBase extends JWalletContainer with JHttpJubiter {
     json["uuid"] = uuid;
     json["mainPath"] = _mainPath;
     json["balance"] = _balance;
+    json["version"] = version;
     return json;
   }
 
