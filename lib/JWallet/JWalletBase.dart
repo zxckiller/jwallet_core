@@ -155,4 +155,7 @@ abstract class JWalletBase extends JWalletContainer with JHttpJubiter {
     name = walletName;
     return updateSelf();
   }
+
+  /// 广播交易
+  Future<String> broadcastRaw(String raw, {String userId});
 }

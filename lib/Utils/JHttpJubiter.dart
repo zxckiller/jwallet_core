@@ -16,11 +16,12 @@ mixin JHttpJubiter{
     });
     if(parmas.length != 0) uriParams = uriParams.substring(0,uriParams.length-1);
 
-    print('[url] $url, [params] $uriParams');
+    print('[core] request - url： $url, params： $uriParams');
 
     var header = Map<String,String>();
     header['Content-Type'] = "application/x-www-form-urlencoded";
     var response = await http.post(url,headers:header,body:uriParams);
+    print('[core] response: ${response.body}');
     var resBody = json.decode(response.body);
     if(resBody["statusCode"] != 0) throw resBody["statusCode"];
     return Future<Map<String,dynamic>>.value(resBody);

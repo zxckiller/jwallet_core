@@ -294,7 +294,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: b86bfef7de0e5a58bb8e6d86d690ee3a576ed0bd
+      resolved-ref: db538d3d723fd34ba63d6aaf20e3cd444fbe9937
       url: "https://github.com/CubeFeng/JuBiter-Plugin.git"
     source: git
     version: "0.0.1"

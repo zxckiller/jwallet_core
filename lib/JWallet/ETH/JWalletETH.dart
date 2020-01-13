@@ -38,6 +38,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
   final String erc20InfoUrl = "/api/v2/queryTokensByNameOrAddr";
   final String historyUrl = "/api/v2/queryTransactionsByAddrs/breif";
   final String minerFeeUrl = "/api/getMinerFeeEstimations";
+  final String broadcastUrl = "/api/broadcastTransaction";
 
   String _address = "";
 
@@ -182,7 +183,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
 
     params["contractAddrs"] = contractAddress;
     var response = await httpPost(url, params);
-    print('[core] response: $response');
+//    print('[core] eth response: $response');
     var accountInfo = AccountInfo.fromJson(response);
     return Future<AccountInfo>.value(accountInfo);
   }
@@ -359,5 +360,19 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
   Future<ResultString> signTX(String password, TransactionETH tx) async {
     if (!await keyStore.verifyPin(contextID, password)) throw JUBR_WRONG_PASSWORD;
     return await JuBiterEthereum.signTransaction(contextID, tx);
+  }
+
+  @override
+  Future<String> broadcastRaw(String raw, {String userId}) async {
+    String url = endPoint + broadcastUrl;
+    Map<String, String> params = new Map<String, String>();
+    params["rawtx"] = raw;
+//    params["uid"] = userId;
+
+    var response = await httpPost(url, params);
+    if (response['statusCode'] != 0) {
+      return Future<String>.error('网络异常');
+    }
+    return Future<String>.value(response['data']);
   }
 }
