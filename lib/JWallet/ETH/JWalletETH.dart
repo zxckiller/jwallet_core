@@ -29,7 +29,7 @@ import './Model/miner_fee.dart' as $minerfee;
 class JWalletETH extends JWalletBase with JInterfaceETH {
   static final CURVES curve = CURVES.secp256k1;
   static final String defaultPath = "m/44'/60'/0'";
-  static final int chainID = 0;
+  static final int chainID = 1;
   static final int decimal = 18;
 
   List<$history.TxList> _txList = new List<$history.TxList>();
