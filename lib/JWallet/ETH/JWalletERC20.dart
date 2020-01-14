@@ -101,7 +101,7 @@ class JWalletERC20 extends JWalletETH {
     var rv = await buildERC20Abi(_erc20Info, to, valueInWei);
     if (rv.stateCode != JUBR_OK) throw rv.stateCode;
 
-    Bip32Path bip32path = Bip32Path.create();
+    Bip44Path bip32path = Bip44Path.create();
     bip32path.change = false;
     bip32path.addressIndex = $fixnum.Int64(0);
 

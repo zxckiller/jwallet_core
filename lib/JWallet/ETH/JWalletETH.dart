@@ -27,7 +27,7 @@ import './Model/e_t_h_history.dart' as $history;
 import './Model/miner_fee.dart' as $minerfee;
 
 class JWalletETH extends JWalletBase with JInterfaceETH {
-  static final CURVES curve = CURVES.secp256k1;
+  static final CURVES curve = CURVES.SECP256K1;
   static final String defaultPath = "m/44'/60'/0'";
   static final int chainID = 1;
   static final int decimal = 18;
@@ -87,7 +87,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
           if (deviceMAC == null || deviceID == null) return Future<bool>.value(false);
           if (deviceMAC != keyStore.getDeviceMAC()) return Future<bool>.value(false);
           ContextCfgETH config = ContextCfgETH.create();
-          config.chainID = chainID;
+          config.chainId = chainID;
           config.mainPath = mainPath;
           ResultInt contextResult = await JuBiterEthereum.createContext(config, deviceID);
           if (contextResult.stateCode == JUBR_OK) {
@@ -101,7 +101,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
         {
           String xprv = await keyStore.getXprv();
           ContextCfgETH config = ContextCfgETH.create();
-          config.chainID = chainID;
+          config.chainId = chainID;
           config.mainPath = mainPath;
           ResultInt contextResult = await JuBiterEthereum.createContext_Software(config, xprv);
           if (contextResult.stateCode == JUBR_OK) {
@@ -129,7 +129,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
   }
 
   Future<String> _getAddressFromKeystore() async {
-    Bip32Path path = Bip32Path.create();
+    Bip44Path path = Bip44Path.create();
     path.change = false;
     path.addressIndex = $fixnum.Int64(0);
     ResultString address = await JuBiterEthereum.getAddress(contextID, path, false);
@@ -233,7 +233,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
 
   @override
   Future<ResultString> getHDNode(ENUM_PUB_FORMAT format) async {
-    Bip32Path path = Bip32Path.create();
+    Bip44Path path = Bip44Path.create();
     path.change = false;
     path.addressIndex = $fixnum.Int64(0);
     return await JuBiterEthereum.getHDNode(contextID, format, path);
@@ -342,11 +342,11 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
   @override
   Future<TransactionETH> buildTx(
       String to, String valueInWei, String gasPriceInWei, String input) async {
-    Bip32Path bip32path = Bip32Path.create();
-    bip32path.change = false;
-    bip32path.addressIndex = $fixnum.Int64(0);
+    Bip44Path bip44path = Bip44Path.create();
+    bip44path.change = false;
+    bip44path.addressIndex = $fixnum.Int64(0);
     TransactionETH txInfo = TransactionETH.create();
-    txInfo.path = bip32path;
+    txInfo.path = bip44path;
     txInfo.nonce = (await getNonce()).item1;
     txInfo.gasLimit = 27800;
     txInfo.gasPriceInWei = gasPriceInWei;

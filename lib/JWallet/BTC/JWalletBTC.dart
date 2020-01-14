@@ -6,7 +6,7 @@ import 'package:jubiter_plugin/gen/Jub_Common.pbenum.dart';
 import 'package:jubiter_plugin/gen/Jub_Common.pbserver.dart';
 
 class JWalletBTC extends JWalletBase with JInterfaceBTC{
-  static CURVES curve = CURVES.secp256k1;
+  static CURVES curve = CURVES.SECP256K1;
   static String defaultPath = "m/44'/0'/0'";
 
   JWalletBTC(String name,String mainPath,String endPoint,JInterfaceKeyStore keyStoreimpl):super(name,mainPath??defaultPath,endPoint,keyStoreimpl){

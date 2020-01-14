@@ -7,7 +7,7 @@ class JProductHD extends JProductBase{
   JKeyStoreDBImpl _keyStore;
   JProductHD(String mnemonic,String passphase,String password,String name):super(name){
     pType = ProductType.HD;
-    _keyStore = new JKeyStoreDBImpl(mnemonic,passphase,password,CURVES.secp256k1);
+    _keyStore = new JKeyStoreDBImpl(mnemonic,passphase,password,CURVES.SECP256K1);
   }
 
   //Json构造函数
