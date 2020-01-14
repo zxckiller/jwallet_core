@@ -373,6 +373,6 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
     if (response['statusCode'] != 0) {
       return Future<String>.error('网络异常');
     }
-    return Future<String>.value(response['data']);
+    return Future<String>.value(response['data']['txid']);
   }
 }
