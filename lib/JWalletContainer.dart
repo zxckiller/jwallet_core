@@ -54,12 +54,6 @@ abstract class JWalletContainer extends JsonableObject{
     if(await getJWalletManager().containsKey(wallet)){
       getJWalletManager().removeWallet(wallet);
       _wallets.remove(wallet);
-      // 若钱包为空，删除容器
-      if (_wallets.isEmpty) {
-        // 删除容器
-        bool result = await getJProductManager().deleteOne(name);
-        print('remove wallet: $result');
-      }
       return updateSelf();
     }
     else throw JUBR_NO_ITEM; //数据库里面没有这个钱包，没办法映射

@@ -40,6 +40,20 @@ abstract class JProductBase extends JWalletContainer{
     return Future<bool>.value(true);
   }
 
+  @override
+  Future<bool> removeWallet(String wallet) async{
+    bool bSuccess = await super.removeWallet(wallet);
+    if(!bSuccess){return false;}
+    // 若钱包为空，删除容器
+    if (enumWallets().isEmpty) {
+      // 删除容器
+      bool result = await getJProductManager().deleteProduct(name);
+      print('remove wallet: $result');
+      return result;
+    }
+    return true;
+  }
+
   //创建钱包，base不实现，交给子类
   Future<String> newWallet(String mainPath,String endPoint, WalletType wType);
 
