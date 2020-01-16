@@ -10,12 +10,16 @@ import 'package:jubiter_plugin/jubiter_plugin.dart';
 import 'package:jwallet_core/Error.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
 
+import './Model/b_t_c_balance.dart' as $balanceInfo;
+
 import '../../Utils/JUtils.dart';
 
 class JWalletBTC extends JWalletBase with JInterfaceBTC{
   static CURVES curve = CURVES.SECP256K1;
   static String defaultPath = "m/44'/0'/0'";
   static final int decimal = 8;
+
+  final String balanceUrl = "/api/queryBalanceByAccount";
 
   String _address = "";
   String _xpub = "";
@@ -121,8 +125,23 @@ class JWalletBTC extends JWalletBase with JInterfaceBTC{
   }
 
   String getAddress(){return _address;}
+  String getXpub(){return _xpub;}
 
+  @override
+  String getLocalBalance() {
+    return balance;
+  }
 
+  @override
+  Future<String> getCloudBalance() async {
+    String url = endPoint + balanceUrl;
+    Map<String, String> params = new Map<String, String>();
+    params["account"] = _xpub;
+    var response = await httpPost(url, params);
+    var balanceInfo = $balanceInfo.BTCBalance.fromJson(response);
+    balance = balanceInfo.data.toString();
+    return Future<String>.value(balance);
+  }
   
 
   @override
