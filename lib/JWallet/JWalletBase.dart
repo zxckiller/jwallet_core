@@ -107,9 +107,17 @@ abstract class JWalletBase extends JWalletContainer with JHttpJubiter {
     return keyStore.getMnemonic(password);
   }
 
-  //第一次创建的时候调用
-  Future<bool> init() async {
-    return keyStore.init();
+  //init是一样的流程，可以放在base
+  Future<bool> init({String deviceMAC, int deviceID}) async {
+    await keyStore.init();
+    //去取地址
+    bool rv = await active(deviceMAC: deviceMAC, deviceID: deviceID);
+    //把取到的地址，存起来
+    if (rv) {
+      print('>>> init updateSelf');
+      await updateSelf();
+    }
+    return Future<bool>.value(rv);
   }
 
   //每次使用keyStore的时候调用，base不实现，交给子类，不同的子类实现不一样

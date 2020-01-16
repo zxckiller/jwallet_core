@@ -40,6 +40,13 @@ export 'package:jubiter_plugin/gen/Jub_Ethereum.pbenum.dart';
 export 'package:jubiter_plugin/gen/Jub_Ethereum.pbjson.dart';
 export 'package:jubiter_plugin/gen/Jub_Ethereum.pbserver.dart';
 
+export 'package:jubiter_plugin/gen/Jub_Bitcoin.pb.dart';
+export 'package:jubiter_plugin/gen/Jub_Bitcoin.pbenum.dart';
+export 'package:jubiter_plugin/gen/Jub_Bitcoin.pbjson.dart';
+export 'package:jubiter_plugin/gen/Jub_Bitcoin.pbserver.dart';
+
+
+
 export 'package:jubiter_plugin/gen/jubiterblue.pb.dart';
 export 'package:jubiter_plugin/gen/jubiterblue.pbserver.dart';
 export 'package:jubiter_plugin/gen/jubiterblue.pbenum.dart';

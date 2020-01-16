@@ -65,20 +65,7 @@ class JWalletETH extends JWalletBase with JInterfaceETH {
     json["address"] = _address;
     return json;
   }
-
-  @override
-  Future<bool> init({String deviceMAC, int deviceID}) async {
-    await super.init();
-    //去取地址
-    bool rv = await active(deviceMAC: deviceMAC, deviceID: deviceID);
-    //把取到的地址，存起来
-    if (rv) {
-      print('>>> init updateSelf');
-      await updateSelf();
-    }
-    return Future<bool>.value(rv);
-  }
-
+  
   @override
   Future<bool> active({String deviceMAC, int deviceID}) async {
     switch (keyStore.type()) {
