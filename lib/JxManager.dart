@@ -9,6 +9,7 @@ mixin JPresistManager{
   @protected
   Future<String> addOne(String key,Map<String,dynamic> value) async{
     SharedPreferences prefs =  await SharedPreferences.getInstance();
+    prefs.getKeys().forEach((key) => print('>>> [addOne] $key, ${prefs.get(key)}'));
     bool already = prefs.containsKey(key);
     if(already) throw JUBR_ALREADY_EXITS;
     bool success = await prefs.setString(key, json.encode(value));
@@ -20,6 +21,9 @@ mixin JPresistManager{
   Future<String> updateOne(String key,Map<String,dynamic> value)async{
     print('>>> [updateOne] key: $key, value: ${value.toString()} ');
     SharedPreferences prefs =  await SharedPreferences.getInstance();
+    if (!await containsKey(key)) {
+      throw JUBR_NEVER_EXITS;
+    }
     bool success = await prefs.setString(key, json.encode(value));
     if(success) return Future<String>.value(key);
     else throw JUBR_HOST_MEMORY;
@@ -39,6 +43,7 @@ mixin JPresistManager{
   @protected
   Future<bool> deleteOne(String key) async{
     SharedPreferences prefs =  await SharedPreferences.getInstance();
+    bool state = await prefs.remove(key);
     return prefs.remove(key);
   }
 
